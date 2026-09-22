@@ -63,7 +63,12 @@ pinged about it. Nobody can browse strangers' home addresses.
 
 ### 1. Create a Supabase project
 
-Any project on any account. Note the project ref from the dashboard URL.
+Note the project ref from the dashboard URL.
+
+**Pick `ap-south-1` (Mumbai).** It is the closest Supabase region to Pakistan —
+roughly 1,800km from Lahore versus ~6,000km for Seoul or Singapore. Every query
+and every realtime message pays that round trip, and "the tradesman is pinged
+instantly" is the product.
 
 ### 2. Apply the schema
 
