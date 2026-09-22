@@ -168,7 +168,8 @@ begin
     'new_job_nearby',
     case when new.is_urgent then 'Urgent ' || v_cat_en || ' job nearby'
          else 'New ' || v_cat_en || ' job nearby' end,
-    new.title || ' - ' || round(extensions.st_distance(pp.current_location, new.location) / 1000.0, 1) || ' km away',
+    -- ST_Distance returns double precision; round(double, int) does not exist.
+    new.title || ' - ' || round((extensions.st_distance(pp.current_location, new.location) / 1000.0)::numeric, 1) || ' km away',
     new.id,
     jsonb_build_object(
       'distance_m', round(extensions.st_distance(pp.current_location, new.location)),

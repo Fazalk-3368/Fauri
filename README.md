@@ -13,10 +13,22 @@ Think inDrive, for electricians and plumbers.
 
 ## Status
 
-The web app is feature-complete and builds clean. **It has never been run
-against a live database** — the schema has not been applied to a Supabase
-project yet, so nothing in `supabase/migrations/` is verified beyond review.
-See [Bringing it up](#bringing-it-up).
+The web app is feature-complete and builds clean. The schema is **applied and
+verified** against a live Supabase project (Postgres 17.6, PostGIS 3.3.7):
+
+- All 8 migrations apply cleanly from empty — 11 tables, 24 RLS policies,
+  23 functions, 18 triggers, 31 indexes, 10 seeded trades.
+- The full lifecycle passes end to end: signup trigger → provider goes online →
+  customer posts → **matcher fires with correct geography distance** → bid →
+  accept → en route → in progress → complete → commission ledger → review
+  rolls up the provider's rating.
+- 14 authorization tests pass: an uninvolved provider cannot read a job, its
+  chat or the customer's profile; a provider cannot inflate their own rating,
+  self-verify, cut their own commission or self-accept an offer; a customer
+  cannot flip a job to `completed` or edit the commission ledger.
+
+What has **not** been exercised is the browser path — the app has never been
+run against this database by a real signed-in user. See [Known gaps](#known-gaps).
 
 ## Stack
 
@@ -121,7 +133,8 @@ You need two accounts in two browsers (or one plus a private window):
 
 These are deliberate omissions, not oversights:
 
-- **Nothing has been run against a real database.** Expect to fix things.
+- **The UI has not been driven against the live database.** The SQL layer is
+  tested; signing in through the browser and posting a real job is not.
 - **No provider verification flow.** The `verification_status` column exists and
   the badge renders, but there is no CNIC upload or admin approval screen.
 - **No push notifications.** Alerts only arrive in an open tab. A tradesman with
