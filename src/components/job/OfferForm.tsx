@@ -105,7 +105,7 @@ export function OfferForm({
               type="number"
               inputMode="numeric"
               min={1}
-              step={50}
+              step={1}
               required
               value={price}
               onChange={(e) => setPrice(e.target.value)}

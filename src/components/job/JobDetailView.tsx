@@ -175,27 +175,34 @@ export function JobDetailView({
             </div>
           </Card>
 
-          {/* the counterpart, once there is one */}
-          {provider && (isCustomer || isAssignedProvider) && (
+          {/* The other party. A customer sees their tradesman (with rating);
+              the tradesman sees their customer. Never yourself. */}
+          {counterpart && (isCustomer || isAssignedProvider) && (
             <Card className="flex flex-wrap items-center gap-4 p-5">
               <div className="min-w-0 flex-1">
-                <p className="text-xs text-muted">{dict.job.assignedTo}</p>
-                <div className="mt-0.5 flex items-center gap-2">
-                  <p className="truncate font-semibold">{provider.full_name}</p>
-                  <BadgeCheck className="size-4 shrink-0 text-brand" />
-                </div>
-                <p className="mt-1 flex items-center gap-1 text-xs text-muted">
-                  <Star className="size-3.5 fill-current text-urgent" />
-                  {provider.rating_count > 0
-                    ? `${Number(provider.rating_avg).toFixed(1)} (${provider.rating_count})`
-                    : dict.common.none}
+                <p className="text-xs text-muted">
+                  {isCustomer ? dict.job.assignedTo : dict.auth.customer}
                 </p>
+                <div className="mt-0.5 flex items-center gap-2">
+                  <p className="truncate font-semibold">{counterpart.full_name}</p>
+                  {isCustomer && provider?.verification_status === 'verified' && (
+                    <BadgeCheck className="size-4 shrink-0 text-brand" />
+                  )}
+                </div>
+                {isCustomer && provider && (
+                  <p className="mt-1 flex items-center gap-1 text-xs text-muted">
+                    <Star className="size-3.5 fill-current text-urgent" />
+                    {provider.rating_count > 0
+                      ? `${Number(provider.rating_avg).toFixed(1)} (${provider.rating_count})`
+                      : dict.common.none}
+                  </p>
+                )}
               </div>
               {counterpartPhone && (
                 <a href={`tel:${counterpartPhone}`}>
                   <Button variant="secondary" size="sm">
                     <Phone className="size-4" />
-                    {counterpartPhone}
+                    <span dir="ltr">{counterpartPhone}</span>
                   </Button>
                 </a>
               )}
@@ -287,7 +294,7 @@ export function JobDetailView({
                       id="final"
                       type="number"
                       min={1}
-                      step={50}
+                      step={1}
                       value={finalAmount}
                       onChange={(e) => setFinalAmount(e.target.value)}
                       dir="ltr"
@@ -345,7 +352,7 @@ export function JobDetailView({
                           id="final-c"
                           type="number"
                           min={1}
-                          step={50}
+                          step={1}
                           value={finalAmount}
                           onChange={(e) => setFinalAmount(e.target.value)}
                           dir="ltr"

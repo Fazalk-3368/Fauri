@@ -129,7 +129,7 @@ export function NewJobForm({ categories }: { categories: ServiceCategory[] }) {
               type="number"
               inputMode="numeric"
               min={1}
-              step={50}
+              step={1}
               value={budget}
               onChange={(e) => setBudget(e.target.value)}
               placeholder="2000"

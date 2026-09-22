@@ -265,6 +265,7 @@ export type JobDetail = {
     rating_avg: number;
     rating_count: number;
     jobs_completed: number;
+    verification_status: VerificationStatus;
     lat: number | null;
     lng: number | null;
     location_updated_at: string | null;

@@ -104,6 +104,7 @@ begin
                       then p.phone else null end,
         'rating_avg', pp.rating_avg, 'rating_count', pp.rating_count,
         'jobs_completed', pp.jobs_completed,
+        'verification_status', pp.verification_status,
         'lat', extensions.st_y(pp.current_location::extensions.geometry),
         'lng', extensions.st_x(pp.current_location::extensions.geometry),
         'location_updated_at', pp.location_updated_at)

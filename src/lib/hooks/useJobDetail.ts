@@ -12,6 +12,16 @@ export function useJobDetail(jobId: string, initial: JobDetail) {
   const [detail, setDetail] = useState<JobDetail>(initial);
   const [refreshing, setRefreshing] = useState(false);
 
+  // The server can hand us fresher data (router.refresh() after a notification,
+  // a navigation, a tab focus). Adopt it when its timestamp moves forward.
+  // This is React's documented "adjust state during render" pattern -- doing it
+  // in an effect would render the stale job first and cascade an extra pass.
+  const [seenStamp, setSeenStamp] = useState(initial.job.updated_at);
+  if (initial.job.updated_at !== seenStamp) {
+    setSeenStamp(initial.job.updated_at);
+    setDetail(initial);
+  }
+
   const refresh = useCallback(async () => {
     setRefreshing(true);
     const { data } = await createClient().rpc('job_detail', { p_job_id: jobId });
@@ -73,6 +83,21 @@ export function useJobDetail(jobId: string, initial: JobDetail) {
       supabase.removeChannel(channel);
     };
   }, [providerId, trackable]);
+
+  // postgres_changes delivery for jobs/job_offers proved unreliable in testing,
+  // so re-sync when the user returns to the tab. Cheap, and it means a job page
+  // is never silently stale even if the socket drops.
+  useEffect(() => {
+    const onVisible = () => {
+      if (document.visibilityState === 'visible') void refresh();
+    };
+    document.addEventListener('visibilitychange', onVisible);
+    window.addEventListener('focus', onVisible);
+    return () => {
+      document.removeEventListener('visibilitychange', onVisible);
+      window.removeEventListener('focus', onVisible);
+    };
+  }, [refresh]);
 
   return { detail, refresh, refreshing, setDetail };
 }
