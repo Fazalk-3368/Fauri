@@ -1,4 +1,4 @@
--- Labeeb :: realtime publication + reference data
+-- Fauri :: realtime publication + reference data
 
 -- Realtime filters on non-primary-key columns (user_id, job_id) need the full
 -- old row, so these tables publish complete images.

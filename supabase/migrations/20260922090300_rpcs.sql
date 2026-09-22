@@ -1,4 +1,4 @@
--- Labeeb :: RPCs
+-- Fauri :: RPCs
 -- Every state change that must be atomic or must outrank RLS lives here,
 -- rather than being assembled from client-side writes.
 

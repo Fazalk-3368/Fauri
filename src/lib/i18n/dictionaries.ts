@@ -3,8 +3,8 @@
 
 export const en = {
   common: {
-    appName: 'Labeeb',
-    tagline: 'Emergency tradesmen, after hours.',
+    appName: 'Fauri',
+    tagline: 'Always at your service.',
     loading: 'Loading…',
     save: 'Save',
     saving: 'Saving…',
@@ -38,7 +38,7 @@ export const en = {
   },
   landing: {
     headline: 'The shops close at 9. Emergencies do not.',
-    sub: 'A burst pipe or a dead fuse after curfew should not mean waiting until morning. Labeeb connects you to electricians, plumbers and technicians working independently near you, right now.',
+    sub: 'A burst pipe or a dead fuse after curfew should not mean waiting until morning. Fauri connects you to electricians, plumbers and technicians working independently near you, right now.',
     ctaCustomer: 'I need a tradesman',
     ctaProvider: 'I am a tradesman',
     login: 'Log in',
@@ -220,8 +220,8 @@ type Mirror<T> = { readonly [K in keyof T]: T[K] extends object ? Mirror<T[K]> :
 
 export const ur: Mirror<Dictionary> = {
   common: {
-    appName: 'لبیب',
-    tagline: 'رات گئے ہنگامی کاریگر۔',
+    appName: 'فوری',
+    tagline: 'ہمیشہ حاضر۔',
     loading: 'لوڈ ہو رہا ہے…',
     save: 'محفوظ کریں',
     saving: 'محفوظ ہو رہا ہے…',
@@ -255,7 +255,7 @@ export const ur: Mirror<Dictionary> = {
   },
   landing: {
     headline: 'دکانیں نو بجے بند ہو جاتی ہیں۔ ہنگامی حالات نہیں۔',
-    sub: 'رات کو پائپ پھٹ جائے یا بجلی چلی جائے تو صبح کا انتظار ضروری نہیں۔ لبیب آپ کو آپ کے قریب آزادانہ کام کرنے والے الیکٹریشن، پلمبر اور ٹیکنیشن سے فوراً ملاتا ہے۔',
+    sub: 'رات کو پائپ پھٹ جائے یا بجلی چلی جائے تو صبح کا انتظار ضروری نہیں۔ فوری آپ کو آپ کے قریب آزادانہ کام کرنے والے الیکٹریشن، پلمبر اور ٹیکنیشن سے فوراً ملاتا ہے۔',
     ctaCustomer: 'مجھے کاریگر چاہیے',
     ctaProvider: 'میں کاریگر ہوں',
     login: 'لاگ ان',
@@ -433,7 +433,7 @@ export const ur: Mirror<Dictionary> = {
 export const dictionaries = { en, ur } as const;
 export type Locale = keyof typeof dictionaries;
 export const LOCALES: Locale[] = ['en', 'ur'];
-export const LOCALE_COOKIE = 'labeeb_locale';
+export const LOCALE_COOKIE = 'fauri_locale';
 
 export function getDictionary(locale: Locale): Dictionary {
   return (dictionaries[locale] ?? en) as Dictionary;

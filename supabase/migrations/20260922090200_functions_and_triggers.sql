@@ -1,4 +1,4 @@
--- Labeeb :: functions, triggers and RPCs
+-- Fauri :: functions, triggers and RPCs
 -- Every function pins an empty search_path and fully qualifies its references,
 -- so a hostile schema on the caller's path cannot hijack a SECURITY DEFINER body.
 

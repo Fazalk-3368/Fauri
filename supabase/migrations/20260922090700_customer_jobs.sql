@@ -1,4 +1,4 @@
--- Labeeb :: the customer's job list in one round trip
+-- Fauri :: the customer's job list in one round trip
 
 create or replace function public.customer_jobs(p_limit integer default 50)
 returns table (

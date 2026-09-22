@@ -1,4 +1,4 @@
--- Labeeb :: core tables
+-- Fauri :: core tables
 
 -- ---------------------------------------------------------------------------
 -- profiles : one row per auth user

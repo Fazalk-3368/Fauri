@@ -15,10 +15,10 @@ const notoUrdu = Noto_Nastaliq_Urdu({
 });
 
 export const metadata: Metadata = {
-  title: 'Labeeb — Emergency tradesmen, after hours',
+  title: 'Fauri — Emergency tradesmen, always at your service',
   description:
     'Find electricians, plumbers and technicians working near you right now, even after the shops close.',
-  applicationName: 'Labeeb',
+  applicationName: 'Fauri',
 };
 
 export const viewport: Viewport = {

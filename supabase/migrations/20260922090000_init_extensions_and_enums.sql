@@ -1,4 +1,4 @@
--- Labeeb :: extensions + enum types
+-- Fauri :: extensions + enum types
 -- PostGIS powers the "which providers are near this job" matching.
 
 create extension if not exists postgis with schema extensions;

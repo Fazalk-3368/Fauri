@@ -1,4 +1,6 @@
-# Labeeb
+# Fauri
+
+**فوری — ہمیشہ حاضر** · *"Immediate — always at your service."*
 
 An on-demand marketplace for emergency tradework in Pakistan. When shops have to
 shut at 9pm but a pipe bursts at 11, a customer posts the job, every qualified

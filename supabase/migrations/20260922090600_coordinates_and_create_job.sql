@@ -1,4 +1,4 @@
--- Labeeb :: plain lat/lng alongside the PostGIS geography
+-- Fauri :: plain lat/lng alongside the PostGIS geography
 -- PostgREST's handling of geography input/output is fiddly. Writes go through
 -- create_job(), and reads get these generated columns, so the client never has
 -- to serialise GeoJSON.

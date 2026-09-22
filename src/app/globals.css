@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
 /* ---------------------------------------------------------------------------
-   Labeeb design tokens
+   Fauri design tokens
    Green reads as "go" and is culturally at home in Pakistan; amber is reserved
    strictly for emergencies so an urgent job is never mistaken for a normal one.
 --------------------------------------------------------------------------- */
@@ -135,7 +135,7 @@ body {
   overflow: hidden;
 }
 
-@keyframes labeeb-pulse {
+@keyframes fauri-pulse {
   0% { transform: scale(0.85); opacity: 0.85; }
   70% { transform: scale(1.9); opacity: 0; }
   100% { transform: scale(1.9); opacity: 0; }
@@ -146,13 +146,13 @@ body {
   inset: 0;
   border-radius: 9999px;
   background: var(--brand);
-  animation: labeeb-pulse 2s ease-out infinite;
+  animation: fauri-pulse 2s ease-out infinite;
 }
 
-@keyframes labeeb-in {
+@keyframes fauri-in {
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: none; }
 }
 .animate-in-up {
-  animation: labeeb-in 0.24s ease-out both;
+  animation: fauri-in 0.24s ease-out both;
 }

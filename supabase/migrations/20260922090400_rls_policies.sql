@@ -1,4 +1,4 @@
--- Labeeb :: row level security
+-- Fauri :: row level security
 -- Default posture: deny. Column-level grants stop a client from writing the
 -- fields the platform owns (ratings, commission, verification, job status).
 
