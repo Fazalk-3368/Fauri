@@ -1,26 +1,158 @@
 @import "tailwindcss";
 
+/* ---------------------------------------------------------------------------
+   Labeeb design tokens
+   Green reads as "go" and is culturally at home in Pakistan; amber is reserved
+   strictly for emergencies so an urgent job is never mistaken for a normal one.
+--------------------------------------------------------------------------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --bg: oklch(0.985 0.004 140);
+  --surface: oklch(1 0 0);
+  --surface-2: oklch(0.965 0.006 140);
+  --border: oklch(0.905 0.008 140);
+  --fg: oklch(0.23 0.02 155);
+  --muted: oklch(0.52 0.018 155);
+  --brand: oklch(0.56 0.135 160);
+  --brand-hover: oklch(0.5 0.135 160);
+  --brand-soft: oklch(0.94 0.04 160);
+  --brand-fg: oklch(0.99 0 0);
+  --urgent: oklch(0.67 0.17 55);
+  --urgent-soft: oklch(0.95 0.05 65);
+  --danger: oklch(0.57 0.2 27);
+  --danger-soft: oklch(0.95 0.04 27);
+  --info: oklch(0.58 0.13 250);
+  --ring: oklch(0.56 0.135 160 / 0.45);
+  --shadow-color: 155 25% 12%;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg: oklch(0.175 0.014 160);
+    --surface: oklch(0.215 0.016 160);
+    --surface-2: oklch(0.255 0.018 160);
+    --border: oklch(0.315 0.018 160);
+    --fg: oklch(0.96 0.008 150);
+    --muted: oklch(0.71 0.018 150);
+    --brand: oklch(0.72 0.145 160);
+    --brand-hover: oklch(0.78 0.145 160);
+    --brand-soft: oklch(0.3 0.05 160);
+    --brand-fg: oklch(0.17 0.02 160);
+    --urgent: oklch(0.78 0.15 60);
+    --urgent-soft: oklch(0.32 0.06 60);
+    --danger: oklch(0.68 0.18 27);
+    --danger-soft: oklch(0.31 0.07 27);
+    --info: oklch(0.7 0.12 250);
+    --ring: oklch(0.72 0.145 160 / 0.5);
+    --shadow-color: 160 40% 3%;
   }
 }
 
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-fg: var(--fg);
+  --color-muted: var(--muted);
+  --color-brand: var(--brand);
+  --color-brand-hover: var(--brand-hover);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-fg: var(--brand-fg);
+  --color-urgent: var(--urgent);
+  --color-urgent-soft: var(--urgent-soft);
+  --color-danger: var(--danger);
+  --color-danger-soft: var(--danger-soft);
+  --color-info: var(--info);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+  --font-urdu: var(--font-noto-urdu), var(--font-geist-sans), sans-serif;
+
+  --radius-card: 1rem;
+
+  --shadow-soft: 0 1px 2px hsl(var(--shadow-color) / 0.06),
+                 0 4px 16px -4px hsl(var(--shadow-color) / 0.08);
+  --shadow-lift: 0 2px 4px hsl(var(--shadow-color) / 0.08),
+                 0 12px 32px -8px hsl(var(--shadow-color) / 0.16);
+}
+
+* {
+  border-color: var(--border);
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Urdu is set in Nastaliq, which needs far more vertical room than Latin. */
+[dir="rtl"] body {
+  font-family: var(--font-urdu);
+  line-height: 2.1;
+}
+[dir="rtl"] input,
+[dir="rtl"] textarea,
+[dir="rtl"] button {
+  line-height: 1.9;
+}
+
+::selection {
+  background: var(--brand);
+  color: var(--brand-fg);
+}
+
+:where(a, button, input, textarea, select, [tabindex]):focus-visible {
+  outline: 2px solid var(--brand);
+  outline-offset: 2px;
+}
+
+/* Inputs keep 16px on mobile so iOS Safari does not zoom the page on focus. */
+@media (max-width: 640px) {
+  input,
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* MapLibre's stylesheet ships its own controls; tone them into the theme. */
+.maplibregl-ctrl-attrib {
+  font-size: 10px;
+  opacity: 0.65;
+}
+.maplibregl-ctrl-group {
+  border-radius: 0.6rem !important;
+  overflow: hidden;
+}
+
+@keyframes labeeb-pulse {
+  0% { transform: scale(0.85); opacity: 0.85; }
+  70% { transform: scale(1.9); opacity: 0; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+.pulse-ring::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 9999px;
+  background: var(--brand);
+  animation: labeeb-pulse 2s ease-out infinite;
+}
+
+@keyframes labeeb-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-in-up {
+  animation: labeeb-in 0.24s ease-out both;
 }
