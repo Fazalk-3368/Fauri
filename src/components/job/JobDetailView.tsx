@@ -18,7 +18,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useI18n } from '@/lib/i18n/provider';
 import { useJobDetail } from '@/lib/hooks/useJobDetail';
 import { useToast } from '@/components/ui/toast';
-import { Badge, Button, Card, ErrorNote, Field, Input } from '@/components/ui';
+import { Badge, Button, Card, Dialog, ErrorNote, Field, Input, Textarea } from '@/components/ui';
 import { MapCanvas, type MapMarker } from '@/components/map/MapCanvas';
 import { OfferList } from './OfferList';
 import { OfferForm } from './OfferForm';
@@ -45,6 +45,8 @@ export function JobDetailView({
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [completing, setCompleting] = useState(false);
+  const [cancelling, setCancelling] = useState(false);
+  const [cancelReason, setCancelReason] = useState('');
   const [finalAmount, setFinalAmount] = useState(String(job.final_amount_pkr ?? ''));
 
   const isCustomer = viewerId === job.customer_id;
@@ -97,9 +99,11 @@ export function JobDetailView({
     run(() => createClient().rpc('update_job_status', { p_job_id: job.id, p_status: status }));
 
   const cancel = async () => {
-    const reason = window.prompt(dict.job.cancelReason);
-    if (reason === null) return;
-    await run(() => createClient().rpc('cancel_job', { p_job_id: job.id, p_reason: reason }));
+    setCancelling(false);
+    await run(() =>
+      createClient().rpc('cancel_job', { p_job_id: job.id, p_reason: cancelReason.trim() || null }),
+    );
+    setCancelReason('');
   };
 
   // What the winning bid was. complete_job() lets the provider settle at or
@@ -135,6 +139,31 @@ export function JobDetailView({
 
   return (
     <div className="space-y-6">
+      <Dialog
+        open={cancelling}
+        onClose={() => setCancelling(false)}
+        title={dict.job.cancelJob}
+        description={dict.job.cancelReason}
+        footer={
+          <>
+            <Button variant="secondary" onClick={() => setCancelling(false)}>
+              {dict.common.back}
+            </Button>
+            <Button variant="danger" loading={busy} onClick={cancel}>
+              {dict.job.cancelJob}
+            </Button>
+          </>
+        }
+      >
+        <Textarea
+          value={cancelReason}
+          onChange={(e) => setCancelReason(e.target.value)}
+          maxLength={300}
+          aria-label={dict.job.cancelReason}
+          className="min-h-20"
+        />
+      </Dialog>
+
       {/* header */}
       <div>
         <div className="flex flex-wrap items-center gap-2">
@@ -200,7 +229,7 @@ export function JobDetailView({
                 <div className="mt-0.5 flex items-center gap-2">
                   <p className="truncate font-semibold">{counterpart.full_name}</p>
                   {isCustomer && provider?.verification_status === 'verified' && (
-                    <BadgeCheck className="size-4 shrink-0 text-brand" />
+                    <BadgeCheck className="size-4 shrink-0 text-brand-ink" />
                   )}
                 </div>
                 {isCustomer && provider && (
@@ -381,7 +410,12 @@ export function JobDetailView({
                       </Button>
                     </div>
                   )}
-                  <Button variant="ghost" fullWidth loading={busy} onClick={cancel}>
+                  <Button
+                    variant="ghost"
+                    fullWidth
+                    loading={busy}
+                    onClick={() => setCancelling(true)}
+                  >
                     <XCircle className="size-4" />
                     {dict.job.cancelJob}
                   </Button>

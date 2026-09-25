@@ -72,7 +72,7 @@ function LoginForm() {
 
       <p className="text-center text-sm text-muted">
         {dict.auth.noAccount}{' '}
-        <Link href="/signup" className="font-medium text-brand hover:underline">
+        <Link href="/signup" className="font-medium text-brand-ink hover:underline">
           {dict.auth.signupAction}
         </Link>
       </p>

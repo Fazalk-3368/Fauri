@@ -49,7 +49,7 @@ function NotificationBell({ userId }: { userId: string }) {
       >
         <Bell className="size-5" />
         {unreadCount > 0 && (
-          <span className="absolute end-1.5 top-1.5 grid min-w-4 place-items-center rounded-full bg-urgent px-1 text-[10px] font-bold text-[oklch(0.2_0.03_60)]">
+          <span className="absolute end-1.5 top-1.5 grid min-w-4 place-items-center rounded-full bg-urgent px-1 text-[10px] font-bold text-urgent-fg">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -58,7 +58,7 @@ function NotificationBell({ userId }: { userId: string }) {
       {open && (
         <>
           <div className="fixed inset-0 z-30" onClick={() => setOpen(false)} aria-hidden />
-          <div className="absolute end-0 z-40 mt-2 w-80 overflow-hidden rounded-[var(--radius-card)] border border-border bg-surface shadow-[var(--shadow-lift)]">
+          <div className="absolute end-0 z-40 mt-2 w-80 overflow-hidden rounded-2xl border border-border bg-surface shadow-lg">
             <div className="flex items-center justify-between border-b border-border px-4 py-3">
               <p className="text-sm font-semibold">{dict.notifications.title}</p>
             </div>
@@ -155,7 +155,7 @@ export function AppHeader({ profile }: { profile: Profile }) {
               className={cn(
                 'flex items-center gap-1.5 rounded-xl px-3 py-2 text-sm font-medium transition-colors',
                 pathname === href
-                  ? 'bg-brand-soft text-brand'
+                  ? 'bg-brand-soft text-brand-soft-fg'
                   : 'text-muted hover:bg-surface-2 hover:text-fg',
               )}
             >
@@ -219,7 +219,7 @@ export function AppHeader({ profile }: { profile: Profile }) {
             <button
               type="button"
               onClick={signOut}
-              className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-start text-sm font-medium text-danger hover:bg-danger-soft"
+              className="flex items-center gap-2 rounded-xl px-3 py-2.5 text-start text-sm font-medium text-danger-soft-fg hover:bg-danger-soft"
             >
               <LogOut className="size-4" />
               {dict.nav.logout}

@@ -120,7 +120,7 @@ function SignupForm() {
                   : 'border-border bg-surface hover:bg-surface-2',
               )}
             >
-              <Icon className={cn('size-5', role === value ? 'text-brand' : 'text-muted')} />
+              <Icon className={cn('size-5', role === value ? 'text-brand-soft-fg' : 'text-muted')} />
               <p className="mt-2 text-sm font-semibold">{label}</p>
               <p className="mt-0.5 text-xs leading-snug text-muted">{hint}</p>
             </button>
@@ -184,7 +184,7 @@ function SignupForm() {
 
       <p className="text-center text-sm text-muted">
         {dict.auth.haveAccount}{' '}
-        <Link href="/login" className="font-medium text-brand hover:underline">
+        <Link href="/login" className="font-medium text-brand-ink hover:underline">
           {dict.auth.loginAction}
         </Link>
       </p>

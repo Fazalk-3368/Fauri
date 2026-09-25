@@ -5,7 +5,7 @@ import { BadgeCheck, Clock, Star } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useI18n } from '@/lib/i18n/provider';
 import { useToast } from '@/components/ui/toast';
-import { Badge, Button, Card, EmptyState } from '@/components/ui';
+import { Badge, Button, Card, Dialog, EmptyState } from '@/components/ui';
 import { errorMessage, formatPkr } from '@/lib/utils';
 import type { JobDetailOffer } from '@/lib/types/database';
 
@@ -21,22 +21,12 @@ export function OfferList({
   const { dict, locale, fill } = useI18n();
   const toast = useToast();
   const [acceptingId, setAcceptingId] = useState<string | null>(null);
+  const [confirming, setConfirming] = useState<JobDetailOffer | null>(null);
 
   const pending = offers.filter((o) => o.status === 'pending' || o.status === 'accepted');
 
-  if (pending.length === 0) {
-    return <EmptyState icon={Clock} title={dict.job.noOffersYet} />;
-  }
-
   const accept = async (offer: JobDetailOffer) => {
-    const confirmed = window.confirm(
-      fill(dict.job.acceptConfirm, {
-        price: formatPkr(offer.price_pkr, locale),
-        name: offer.provider_name,
-      }),
-    );
-    if (!confirmed) return;
-
+    setConfirming(null);
     setAcceptingId(offer.id);
     const { error } = await createClient().rpc('accept_offer', { p_offer_id: offer.id });
 
@@ -48,8 +38,39 @@ export function OfferList({
     setAcceptingId(null);
   };
 
+  // Accepting is the decisive moment in the whole product, so it gets a real
+  // dialog rather than a browser confirm sheet with a URL in the title.
+  const confirmDialog = (
+    <Dialog
+      open={confirming !== null}
+      onClose={() => setConfirming(null)}
+      title={dict.job.accept}
+      description={
+        confirming
+          ? fill(dict.job.acceptConfirm, {
+              price: formatPkr(confirming.price_pkr, locale),
+              name: confirming.provider_name,
+            })
+          : undefined
+      }
+      footer={
+        <>
+          <Button variant="secondary" onClick={() => setConfirming(null)}>
+            {dict.common.cancel}
+          </Button>
+          <Button onClick={() => confirming && accept(confirming)}>{dict.common.confirm}</Button>
+        </>
+      }
+    />
+  );
+
+  if (pending.length === 0) {
+    return <EmptyState icon={Clock} title={dict.job.noOffersYet} />;
+  }
+
   return (
     <div className="space-y-3">
+      {confirmDialog}
       {pending.map((offer) => (
         <Card key={offer.id} className="p-4">
           <div className="flex items-start justify-between gap-3">
@@ -57,7 +78,7 @@ export function OfferList({
               <div className="flex items-center gap-2">
                 <p className="truncate font-semibold">{offer.provider_name}</p>
                 {offer.verification_status === 'verified' && (
-                  <BadgeCheck className="size-4 shrink-0 text-brand" aria-label="verified" />
+                  <BadgeCheck className="size-4 shrink-0 text-brand-ink" aria-label="verified" />
                 )}
               </div>
 
@@ -93,7 +114,7 @@ export function OfferList({
                   size="sm"
                   className="mt-2"
                   loading={acceptingId === offer.id}
-                  onClick={() => accept(offer)}
+                  onClick={() => setConfirming(offer)}
                 >
                   {dict.job.accept}
                 </Button>

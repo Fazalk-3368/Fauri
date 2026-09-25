@@ -46,7 +46,7 @@ export function EarningsView({ entries }: { entries: Entry[] }) {
       {entries.length === 0 ? (
         <EmptyState icon={Wallet} title={dict.earnings.noEntries} />
       ) : (
-        <Card className="divide-y divide-[var(--border)] overflow-hidden">
+        <Card className="divide-y divide-border overflow-hidden">
           {entries.map((entry) => (
             <div key={entry.id} className="flex items-center gap-4 p-4">
               <div className="min-w-0 flex-1">

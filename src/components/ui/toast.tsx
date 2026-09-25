@@ -20,7 +20,7 @@ const MAX_VISIBLE = 3;
 
 const TONE_ICON = { success: CheckCircle2, error: TriangleAlert, info: Info } as const;
 const TONE_CLASS: Record<ToastTone, string> = {
-  success: 'border-brand/40 text-brand',
+  success: 'border-brand/40 text-brand-ink',
   error: 'border-danger/40 text-danger',
   info: 'border-border text-info',
 };
@@ -83,7 +83,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             <div
               key={toast.id}
               className={cn(
-                'animate-in-up pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-xl border bg-surface p-3.5 shadow-[var(--shadow-lift)]',
+                'animate-in-up pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-xl border bg-surface p-3.5 shadow-lg',
                 TONE_CLASS[toast.tone],
               )}
             >

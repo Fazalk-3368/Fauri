@@ -81,7 +81,7 @@ export function LocationPicker({
           variant="secondary"
           loading={locating}
           onClick={locate}
-          className="absolute bottom-3 start-3 z-10 shadow-[var(--shadow-lift)]"
+          className="absolute bottom-3 start-3 z-10 shadow-lg"
         >
           {!locating && <Crosshair className="size-4" aria-hidden />}
           {locating ? dict.map.locating : dict.map.useMyLocation}

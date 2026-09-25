@@ -3,7 +3,22 @@ import { createServerClient } from '@supabase/ssr';
 import type { Database } from '@/lib/types/database';
 
 /** Routes a signed-out visitor is allowed to reach. */
-const PUBLIC_PATHS = ['/', '/login', '/signup', '/auth/callback', '/auth/confirm'];
+const PUBLIC_PATHS = [
+  '/',
+  '/login',
+  '/signup',
+  '/auth/callback',
+  '/auth/confirm',
+  // Marketing and legal. Anything added under src/app/(marketing) belongs here
+  // too, or a signed-out visitor gets bounced to the login screen.
+  '/features',
+  '/pricing',
+  '/about',
+  '/contact',
+  '/privacy',
+  '/terms',
+  '/data-deletion',
+];
 
 function isPublic(pathname: string) {
   return PUBLIC_PATHS.some((p) => pathname === p || pathname.startsWith(`${p}/`));

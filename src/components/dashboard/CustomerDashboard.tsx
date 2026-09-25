@@ -18,7 +18,7 @@ function JobCard({ job }: { job: CustomerJob }) {
     <Link href={`/jobs/${job.id}`} className="block">
       <Card
         className={cn(
-          'p-4 transition-shadow hover:shadow-[var(--shadow-lift)]',
+          'p-4 transition-shadow hover:shadow-lg',
           job.is_urgent && isActive(job.status) && 'border-urgent/40',
         )}
       >
