@@ -344,8 +344,11 @@ export const ur: Mirror<Dictionary> = {
     completing: 'بند کیا جا رہا ہے…',
     finalAmount: 'ادا کی گئی حتمی رقم (روپے)',
     completeHint: 'جو نقد رقم واقعی ادا ہوئی اس کی تصدیق کریں۔',
-    agreedHint: 'طے شدہ: {price}۔ کام بڑھ گیا ہو تو زیادہ درج کریں — اس سے کم پر صرف گاہک ہی کام بند کر سکتا ہے۔',
-    belowAgreed: 'صرف گاہک ہی یہ کام {price} سے کم پر بند کر سکتا ہے۔ اُن سے کم رقم کی تصدیق کرائیں۔',
+    // Deliberately English until a native speaker writes these. They appear
+    // while cash is being settled, so a clumsy translation costs more than the
+    // language switch does. `Mirror<Dictionary>` requires the keys to exist.
+    agreedHint: 'Agreed: {price}. Enter more if the work grew — anything less has to be closed by the customer.',
+    belowAgreed: 'Only the customer can close this job for less than {price}. Ask them to confirm the lower amount.',
     postedAt: '{time} پوسٹ ہوا',
     status: {
       open: 'کھلا',
@@ -392,7 +395,10 @@ export const ur: Mirror<Dictionary> = {
   },
   earnings: {
     title: 'کمائی',
-    cashCollected: 'کل وصولی',
+    // English for the same reason as job.agreedHint below. Not revertible to
+    // the old 'کل کمائی' -- that means "total earnings", the overstatement this
+    // label was changed to stop making.
+    cashCollected: 'Cash collected',
     jobsDone: 'مکمل کام',
     commissionDue: 'واجب الادا کمیشن',
     commissionHint: 'گاہک آپ کو نقد ادائیگی کرتے ہیں۔ یہ مکمل کاموں پر پلیٹ فارم کا حصہ ہے جو آپ کے ذمے ہے۔',
