@@ -78,7 +78,7 @@ export function OfferList({
               <div className="flex items-center gap-2">
                 <p className="truncate font-semibold">{offer.provider_name}</p>
                 {offer.verification_status === 'verified' && (
-                  <BadgeCheck className="size-4 shrink-0 text-brand" aria-label="verified" />
+                  <BadgeCheck className="size-4 shrink-0 text-brand-ink" aria-label="verified" />
                 )}
               </div>
 

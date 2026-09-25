@@ -161,7 +161,7 @@ export default function LandingPage() {
                     style={{ insetInlineStart: '3rem' }}
                   />
                 )}
-                <span className="relative z-10 grid size-10 place-items-center rounded-xl border border-border bg-surface text-brand shadow-sm">
+                <span className="relative z-10 grid size-10 place-items-center rounded-xl border border-border bg-surface text-brand-ink shadow-sm">
                   <Icon className="size-5" />
                 </span>
                 <h3 className="mt-4 font-semibold">{title}</h3>
@@ -173,23 +173,21 @@ export default function LandingPage() {
 
         {/* Tradesmen band: its own surface, so the provider CTA gets a moment
             instead of competing inside the hero. */}
-        <section className="bg-fg text-bg">
+        {/* Tinted rather than dark: the contrast rhythm without the black. */}
+        <section className="border-y border-brand/15 bg-brand-soft">
           <div className="mx-auto grid w-full max-w-6xl items-center gap-8 px-4 py-16 sm:px-6 sm:py-20 lg:grid-cols-[1fr_auto] lg:gap-16">
             <div dir="auto">
               <h2 className="font-display text-3xl font-bold tracking-tight sm:text-4xl">
                 {dict.landing.providerTitle}
               </h2>
-              <p className="mt-4 max-w-2xl text-base leading-relaxed opacity-75">
+              <p className="mt-4 max-w-2xl text-base leading-relaxed text-brand-soft-fg">
                 {dict.landing.providerBody}
               </p>
             </div>
             <Link href="/signup?role=provider" className="lg:justify-self-end">
-              {/* Not the urgent variant: amber now means emergency and nothing
-                  else, and this is a signup. Inverted against the dark band. */}
-              <Button
-                size="lg"
-                className="w-full bg-bg text-fg hover:bg-surface-2 active:bg-surface-3 sm:w-auto"
-              >
+              {/* Not the urgent variant: amber means emergency and nothing
+                  else now, and this is a signup. */}
+              <Button size="lg" className="w-full sm:w-auto">
                 {dict.landing.ctaProvider}
               </Button>
             </Link>

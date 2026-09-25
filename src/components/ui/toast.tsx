@@ -20,7 +20,7 @@ const MAX_VISIBLE = 3;
 
 const TONE_ICON = { success: CheckCircle2, error: TriangleAlert, info: Info } as const;
 const TONE_CLASS: Record<ToastTone, string> = {
-  success: 'border-brand/40 text-brand',
+  success: 'border-brand/40 text-brand-ink',
   error: 'border-danger/40 text-danger',
   info: 'border-border text-info',
 };

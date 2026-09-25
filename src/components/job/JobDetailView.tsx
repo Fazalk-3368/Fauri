@@ -229,7 +229,7 @@ export function JobDetailView({
                 <div className="mt-0.5 flex items-center gap-2">
                   <p className="truncate font-semibold">{counterpart.full_name}</p>
                   {isCustomer && provider?.verification_status === 'verified' && (
-                    <BadgeCheck className="size-4 shrink-0 text-brand" />
+                    <BadgeCheck className="size-4 shrink-0 text-brand-ink" />
                   )}
                 </div>
                 {isCustomer && provider && (

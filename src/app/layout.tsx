@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from 'next';
-import { Plus_Jakarta_Sans, Bricolage_Grotesque, Noto_Nastaliq_Urdu } from 'next/font/google';
+import { Plus_Jakarta_Sans, Newsreader, Noto_Nastaliq_Urdu } from 'next/font/google';
 import { I18nProvider } from '@/lib/i18n/provider';
 import { ToastProvider } from '@/components/ui/toast';
 import { getLocale } from '@/lib/i18n/server';
-import { THEME_COLOR_DARK, THEME_COLOR_LIGHT } from '@/lib/theme';
+import { THEME_COLOR } from '@/lib/theme';
 import './globals.css';
 
 const jakarta = Plus_Jakarta_Sans({
@@ -12,15 +12,15 @@ const jakarta = Plus_Jakarta_Sans({
   display: 'swap',
 });
 
-// Display face for the landing hero and page titles. One weight and no preload:
-// Nastaliq at two weights is already a heavy download for the target market.
-// globals.css routes RTL headlines away from this face, which has no Arabic.
-const bricolage = Bricolage_Grotesque({
-  variable: '--font-bricolage',
+// Display serif, echoing the sibling product's headline voice without copying
+// its face. One weight: Nastaliq is already a heavy download for this market.
+// globals.css routes RTL headlines away from this, since it has no Arabic.
+const newsreader = Newsreader({
+  variable: '--font-newsreader',
   subsets: ['latin'],
-  weight: ['700'],
+  weight: ['600'],
+  style: ['normal'],
   display: 'swap',
-  preload: false,
 });
 
 // Not preloaded: Nastaliq is the heaviest font here and only renders under
@@ -42,10 +42,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: [
-    { media: '(prefers-color-scheme: light)', color: THEME_COLOR_LIGHT },
-    { media: '(prefers-color-scheme: dark)', color: THEME_COLOR_DARK },
-  ],
+  themeColor: THEME_COLOR,
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
@@ -58,7 +55,7 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
     <html
       lang={locale}
       dir={locale === 'ur' ? 'rtl' : 'ltr'}
-      className={`${jakarta.variable} ${bricolage.variable} ${notoUrdu.variable} h-full antialiased`}
+      className={`${jakarta.variable} ${newsreader.variable} ${notoUrdu.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-bg text-fg">

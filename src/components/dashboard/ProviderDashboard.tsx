@@ -38,7 +38,7 @@ function NearbyJobCard({ job }: { job: NearbyJob }) {
                 {locale === 'ur' ? job.category_ur : job.category_en}
               </span>
               <span className="text-xs text-muted">·</span>
-              <span className="inline-flex items-center gap-1 text-xs font-medium text-brand">
+              <span className="inline-flex items-center gap-1 text-xs font-medium text-brand-ink">
                 <Navigation className="size-3" />
                 {formatDistance(job.distance_m, locale)}
               </span>
