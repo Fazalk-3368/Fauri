@@ -23,11 +23,15 @@ const bricolage = Bricolage_Grotesque({
   preload: false,
 });
 
+// Not preloaded: Nastaliq is the heaviest font here and only renders under
+// dir="rtl", so preloading it spent bandwidth on every English page load for
+// nothing. Urdu readers pick it up on swap instead.
 const notoUrdu = Noto_Nastaliq_Urdu({
   variable: '--font-noto-urdu',
   subsets: ['arabic'],
   weight: ['400', '600'],
   display: 'swap',
+  preload: false,
 });
 
 export const metadata: Metadata = {
