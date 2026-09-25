@@ -161,6 +161,10 @@ function SignupForm() {
           <p className="mt-0.5 text-sm font-medium text-fg" dir="ltr">
             {email.trim()}
           </p>
+          {/* Supabase only lets you edit email templates once custom SMTP is
+              configured. Until then the default template sends a link and no
+              code, so the screen has to work for both. */}
+          <p className="mt-3 text-xs leading-relaxed text-muted">{dict.auth.codeOrLink}</p>
         </div>
 
         <form onSubmit={verify} className="mt-6 space-y-4">
