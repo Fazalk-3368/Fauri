@@ -194,7 +194,9 @@ export const en = {
     description: 'Describe the problem',
     descriptionPlaceholder: 'What happened, what you have already tried, anything the worker should bring.',
     location: 'Where are you?',
-    locationHint: 'Drag the pin to your exact gate or door.',
+    // Tap first: the map has always accepted a tap to move the pin, and
+    // dragging is the harder gesture to describe and to perform.
+    locationHint: 'Tap the map where you are. You can drag the pin to adjust it.',
     address: 'Address or landmark',
     addressPlaceholder: 'e.g. House 14, Street 3, Model Town',
     budget: 'Your offer',
@@ -259,7 +261,7 @@ export const en = {
     goOnline: 'Go online',
     goOffline: 'Go offline',
     setLocationTitle: 'Set your location',
-    setLocationHint: 'We could not find you automatically. Drag the pin to where you are working from.',
+    setLocationHint: 'We could not find you automatically. Tap the map where you are working from.',
     useThisLocation: 'Use this location',
     onlineHint: 'You only receive job alerts while you are online.',
     offlineNotice: 'You are offline. Go online to see and receive nearby jobs.',
@@ -587,7 +589,7 @@ export const ur: Mirror<Dictionary> = {
     goOnline: 'آن لائن ہوں',
     goOffline: 'آف لائن ہوں',
     setLocationTitle: 'Set your location',
-    setLocationHint: 'We could not find you automatically. Drag the pin to where you are working from.',
+    setLocationHint: 'We could not find you automatically. Tap the map where you are working from.',
     useThisLocation: 'Use this location',
     onlineHint: 'اطلاعات صرف آن لائن ہونے پر ملیں گی۔',
     offlineNotice: 'آپ آف لائن ہیں۔ قریبی کام دیکھنے کے لیے آن لائن ہوں۔',
