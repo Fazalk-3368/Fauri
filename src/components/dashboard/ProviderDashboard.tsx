@@ -8,10 +8,16 @@ import { createClient } from '@/lib/supabase/client';
 import { useI18n } from '@/lib/i18n/provider';
 import { useProviderLocation } from '@/lib/hooks/useProviderLocation';
 import { useToast } from '@/components/ui/toast';
-import { Badge, Button, Card, EmptyState, Spinner } from '@/components/ui';
+import { Badge, Button, Card, EmptyState } from '@/components/ui';
 import { MapCanvas, type MapMarker } from '@/components/map/MapCanvas';
 import { cn, errorMessage, formatDistance, formatPkr } from '@/lib/utils';
-import type { Job, NearbyJob, Profile, ProviderProfile } from '@/lib/types/database';
+import type {
+  AppNotification,
+  Job,
+  NearbyJob,
+  Profile,
+  ProviderProfile,
+} from '@/lib/types/database';
 
 function NearbyJobCard({ job }: { job: NearbyJob }) {
   const { dict, locale, fill } = useI18n();
@@ -95,7 +101,6 @@ export function ProviderDashboard({
   const [togglingOnline, setTogglingOnline] = useState(false);
   const [jobs, setJobs] = useState<NearbyJob[]>(initialJobs);
   const [activeJob, setActiveJob] = useState<Job | null>(initialActiveJob);
-  const [loadingFeed, setLoadingFeed] = useState(false);
 
   const { position, error: locationError, locating, requestLocation } =
     useProviderLocation(isOnline);
@@ -115,7 +120,6 @@ export function ProviderDashboard({
 
     setJobs(nearby ?? []);
     setActiveJob(active?.[0] ?? null);
-    setLoadingFeed(false);
   }, [profile.id]);
 
   // A nearby-job ping should refresh the feed without the provider doing anything.
@@ -131,7 +135,11 @@ export function ProviderDashboard({
           table: 'notifications',
           filter: `user_id=eq.${profile.id}`,
         },
-        () => void loadFeed(),
+        (payload) => {
+          // Chat pings do not change the feed, and refetching on every message
+          // during a conversation is pure noise.
+          if ((payload.new as AppNotification).type !== 'new_message') void loadFeed();
+        },
       )
       .subscribe();
 
@@ -267,10 +275,6 @@ export function ProviderDashboard({
               </Button>
             }
           />
-        ) : loadingFeed ? (
-          <div className="flex justify-center py-12">
-            <Spinner />
-          </div>
         ) : jobs.length === 0 ? (
           <EmptyState icon={Search} title={dict.provider.noJobs} body={dict.provider.noJobsHint} />
         ) : (

@@ -9,6 +9,16 @@ export default async function ProviderSetupPage() {
   } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
+  // A customer here would get a foreign-key error on save rather than a useful
+  // screen: provider_services references provider_profiles, which they have no
+  // row in. Every other route under (app) guards its role the same way.
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('role')
+    .eq('id', user.id)
+    .single();
+  if (profile?.role !== 'provider') redirect('/dashboard');
+
   const [{ data: categories }, { data: providerProfile }, { data: myServices }] =
     await Promise.all([
       supabase.from('service_categories').select('*').eq('is_active', true).order('sort_order'),

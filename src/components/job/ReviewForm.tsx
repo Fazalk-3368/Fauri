@@ -51,6 +51,7 @@ export function ReviewForm({
     }
 
     toast.success(dict.review.submitted);
+    setLoading(false);
     onSubmitted();
   };
 

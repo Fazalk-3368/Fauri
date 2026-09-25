@@ -171,7 +171,7 @@ export const en = {
   },
   earnings: {
     title: 'Earnings',
-    totalEarned: 'Total earned',
+    cashCollected: 'Cash collected',
     jobsDone: 'Jobs completed',
     commissionDue: 'Commission due',
     commissionHint: 'Customers pay you in cash. This is the platform share you owe on completed jobs.',
@@ -388,7 +388,7 @@ export const ur: Mirror<Dictionary> = {
   },
   earnings: {
     title: 'کمائی',
-    totalEarned: 'کل کمائی',
+    cashCollected: 'کل وصولی',
     jobsDone: 'مکمل کام',
     commissionDue: 'واجب الادا کمیشن',
     commissionHint: 'گاہک آپ کو نقد ادائیگی کرتے ہیں۔ یہ مکمل کاموں پر پلیٹ فارم کا حصہ ہے جو آپ کے ذمے ہے۔',

@@ -21,7 +21,9 @@ export function EarningsView({ entries }: { entries: Entry[] }) {
     .reduce((sum, e) => sum + Number(e.commission_pkr), 0);
 
   const stats = [
-    { label: dict.earnings.totalEarned, value: formatPkr(gross, locale) },
+    // Gross cash taken at the door, before the platform's share below. Calling
+    // this "earned" overstated it by exactly the commission column.
+    { label: dict.earnings.cashCollected, value: formatPkr(gross, locale) },
     { label: dict.earnings.jobsDone, value: String(entries.length) },
     { label: dict.earnings.commissionDue, value: formatPkr(due, locale), warn: true },
   ];

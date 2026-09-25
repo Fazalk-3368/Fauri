@@ -23,13 +23,54 @@ export function formatDistance(metres: number, locale = 'en') {
   }).format(km)} km`;
 }
 
-/** Errors thrown by Postgres RPCs carry a readable message; surface it. */
+/**
+ * Postgres error classes whose messages name constraints, columns and tables.
+ * Useful in a log, meaningless to a customer, and they describe the schema to
+ * anyone poking at the app.
+ */
+const INTERNAL_PG_CODES = new Set([
+  '23502', // not_null_violation
+  '23503', // foreign_key_violation
+  '23505', // unique_violation
+  '23514', // check_violation
+  '22001', // string_data_right_truncation
+  '42703', // undefined_column
+  '42P01', // undefined_table
+]);
+
+/**
+ * Errors raised by our own RPCs carry a message written for the user
+ * ("This job is no longer open"), so those are surfaced as-is. Anything the
+ * database produced on its own falls back to the generic string.
+ */
 export function errorMessage(error: unknown, fallback: string) {
   if (!error) return fallback;
   if (typeof error === 'string') return error;
-  if (typeof error === 'object' && error !== null) {
-    const msg = (error as { message?: unknown }).message;
-    if (typeof msg === 'string' && msg.length > 0) return msg;
+  if (typeof error !== 'object') return fallback;
+
+  const { code, message } = error as { code?: unknown; message?: unknown };
+
+  if (typeof code === 'string') {
+    if (INTERNAL_PG_CODES.has(code) || code.startsWith('PGRST')) return fallback;
+    // An RLS refusal and an RPC's deliberate "only the customer may do this"
+    // share errcode 42501; only the former names the policy.
+    if (code === '42501' && typeof message === 'string' && /row-level security/i.test(message)) {
+      return fallback;
+    }
   }
-  return fallback;
+
+  return typeof message === 'string' && message.length > 0 ? message : fallback;
+}
+
+/**
+ * `next` arrives from the query string, so an absolute URL there would turn a
+ * successful login into an off-site handoff — a clean phishing setup, since the
+ * victim has just proved the site is real by signing into it. Same-origin paths
+ * only. Backslashes are rejected because browsers fold them to slashes.
+ */
+export function safeNext(next: string | null | undefined, fallback = '/dashboard') {
+  if (!next || !next.startsWith('/') || next.startsWith('//') || next.includes('\\')) {
+    return fallback;
+  }
+  return next;
 }

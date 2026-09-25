@@ -43,17 +43,6 @@ export function haversineMetres(a: LatLng, b: LatLng) {
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 
-/** PostGIS geography comes back as GeoJSON when selected through PostgREST. */
-export function pointToLatLng(point: unknown): LatLng | null {
-  if (!point || typeof point !== 'object') return null;
-  const geo = point as { coordinates?: unknown };
-  if (Array.isArray(geo.coordinates) && geo.coordinates.length >= 2) {
-    const [lng, lat] = geo.coordinates as number[];
-    if (typeof lat === 'number' && typeof lng === 'number') return { lat, lng };
-  }
-  return null;
-}
-
 export function browserLocation(): Promise<LatLng> {
   return new Promise((resolve, reject) => {
     if (typeof navigator === 'undefined' || !navigator.geolocation) {

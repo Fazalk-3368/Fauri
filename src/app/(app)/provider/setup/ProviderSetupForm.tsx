@@ -60,7 +60,8 @@ export function ProviderSetupForm({
       return;
     }
 
-    // Replace the trade list wholesale -- simpler and safer than diffing.
+    // Diff against what was already stored, so an unchanged selection costs no
+    // writes and an edit never drops rows it is about to re-add.
     const toRemove = selectedCategoryIds.filter((id) => !selected.includes(id));
     const toAdd = selected.filter((id) => !selectedCategoryIds.includes(id));
 

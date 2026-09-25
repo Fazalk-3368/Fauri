@@ -7,7 +7,7 @@ import { Wrench } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useI18n } from '@/lib/i18n/provider';
 import { Button, ErrorNote, Field, Input } from '@/components/ui';
-import { errorMessage } from '@/lib/utils';
+import { errorMessage, safeNext } from '@/lib/utils';
 
 function LoginForm() {
   const { dict } = useI18n();
@@ -34,7 +34,7 @@ function LoginForm() {
       return;
     }
 
-    router.push(params.get('next') || '/dashboard');
+    router.push(safeNext(params.get('next')));
     router.refresh();
   };
 
