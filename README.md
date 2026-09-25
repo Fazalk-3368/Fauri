@@ -170,8 +170,9 @@ These are deliberate omissions, not oversights:
 - **No automated tests.**
 - **Jobs never expire.** The `expired` status exists but nothing sets it; a cron
   job should close stale open jobs.
-- **The job's final amount is self-reported.** `complete_job()` takes whatever
-  figure the closing party passes, so a provider can settle a PKR 5,000 job at
-  500 and shrink the platform's cut to match. Cash changing hands offline makes
-  this hard to solve outright, but defaulting to the accepted offer price and
-  making the customer confirm any reduction would close the easy version.
+- **A colluding pair can still understate the job.** `complete_job()` anchors to
+  the accepted bid: a provider may close at or above it, and only the customer
+  can settle below. That removes the unilateral version — a provider cannot
+  quietly shrink their own commission — but a customer willing to help still
+  can. Both figures land in `job_events`, so the discrepancy is at least
+  visible. Real enforcement needs receipts or in-app payment, not more rules.
