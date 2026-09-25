@@ -52,7 +52,7 @@ export default function LandingPage() {
         {/* hero */}
         <section className="mx-auto w-full max-w-6xl px-4 pt-12 pb-16 sm:pt-20 sm:pb-24">
           <div className="max-w-3xl">
-            <span className="inline-flex items-center gap-2 rounded-full border border-urgent/30 bg-urgent-soft px-3 py-1 text-xs font-medium text-urgent">
+            <span className="inline-flex items-center gap-2 rounded-full border border-urgent/30 bg-urgent-soft px-3 py-1 text-xs font-medium text-urgent-soft-fg">
               <Clock className="size-3.5" />
               {/* Latin clock times must not be reordered by the RTL paragraph. */}
               <bdi dir="ltr">9:00 PM — 6:00 AM</bdi>
@@ -88,7 +88,7 @@ export default function LandingPage() {
             <ol className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
               {steps.map(({ icon: Icon, title, body }, i) => (
                 <li key={title} className="relative">
-                  <span className="grid size-10 place-items-center rounded-xl bg-brand-soft text-brand">
+                  <span className="grid size-10 place-items-center rounded-xl bg-brand-soft text-brand-soft-fg">
                     <Icon className="size-5" />
                   </span>
                   <p className="mt-4 text-xs font-semibold text-muted">

@@ -155,7 +155,7 @@ export function NewJobForm({ categories }: { categories: ServiceCategory[] }) {
               step={1}
               value={radius}
               onChange={(e) => setRadius(Number(e.target.value))}
-              className="mt-2 w-full accent-[var(--brand)]"
+              className="mt-2 w-full accent-brand"
             />
           </div>
 
@@ -171,7 +171,7 @@ export function NewJobForm({ categories }: { categories: ServiceCategory[] }) {
             )}
           >
             <AlertTriangle
-              className={cn('mt-0.5 size-5 shrink-0', isUrgent ? 'text-urgent' : 'text-muted')}
+              className={cn('mt-0.5 size-5 shrink-0', isUrgent ? 'text-urgent-soft-fg' : 'text-muted')}
             />
             <span>
               <span className="block text-sm font-semibold">{dict.job.urgent}</span>

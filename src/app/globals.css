@@ -23,7 +23,9 @@
   --border-strong: light-dark(oklch(0.855 0.012 70),  oklch(0.395 0.014 60));
   --fg:            light-dark(oklch(0.220 0.015 60),  oklch(0.960 0.005 75));
   --muted:         light-dark(oklch(0.520 0.016 60),  oklch(0.725 0.013 75));
-  --placeholder:   light-dark(oklch(0.600 0.014 60),  oklch(0.620 0.013 75));
+  /* Light sits at 0.548, not 0.60: measured 3.97:1 against --surface there,
+     under the 4.5 floor. Placeholders are form content and get audited. */
+  --placeholder:   light-dark(oklch(0.548 0.014 60),  oklch(0.620 0.013 75));
 
   --brand:          light-dark(oklch(0.510 0.160 338), oklch(0.730 0.145 340));
   --brand-hover:    light-dark(oklch(0.450 0.160 338), oklch(0.795 0.120 340));
@@ -78,20 +80,10 @@
   --map-label-bg:     oklch(1 0 0 / 0.94);
   --map-label-fg:     oklch(0.220 0.015 60);
 
-  --ease-out:  cubic-bezier(0.22, 1, 0.36, 1);
-  --ease-in:   cubic-bezier(0.55, 0, 1, 0.45);
-  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
   --dur-1: 120ms;
   --dur-2: 200ms;
   --dur-3: 320ms;
   --dur-4: 600ms;
-
-  /* Phase 0 aliases. Twelve call sites still use rounded-[var(--radius-card)]
-     and shadow-[var(--shadow-soft|lift)]; these keep them resolving until
-     Phase 1 moves them onto the named utilities. Delete all three then. */
-  --radius-card: var(--radius-2xl);
-  --shadow-soft: var(--shadow-sm);
-  --shadow-lift: var(--shadow-lg);
 }
 
 /* --shadow-color is a bare HSL triplet, not a <color>, so it cannot go through
@@ -164,6 +156,12 @@
    existing rounded-xl / shadow-sm / text-sm call site adopts the new scale
    with no edit. That is why there is no broken intermediate state. */
 @theme {
+  /* In the --ease-* namespace, so the `ease-out` utility and any var() use in
+     CSS are the same curve rather than two different ones. */
+  --ease-out:  cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in:   cubic-bezier(0.55, 0, 1, 0.45);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+
   --radius-xs: 0.375rem;
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;

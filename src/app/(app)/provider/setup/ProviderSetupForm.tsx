@@ -109,7 +109,7 @@ export function ProviderSetupForm({
                   className={cn(
                     'flex items-center justify-between gap-2 rounded-xl border p-3 text-start text-sm font-medium transition-colors',
                     active
-                      ? 'border-brand bg-brand-soft text-brand'
+                      ? 'border-brand bg-brand-soft text-brand-soft-fg'
                       : 'border-border bg-surface hover:bg-surface-2',
                   )}
                 >
@@ -162,7 +162,7 @@ export function ProviderSetupForm({
               step={1}
               value={radius}
               onChange={(e) => setRadius(Number(e.target.value))}
-              className="mt-2 w-full accent-[var(--brand)]"
+              className="mt-2 w-full accent-brand"
             />
             <p className="mt-1 text-xs text-muted">{dict.onboarding.radiusHint}</p>
           </div>

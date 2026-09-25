@@ -212,7 +212,7 @@ export function MapCanvas({
   return (
     <div
       ref={container}
-      className={cn('relative w-full overflow-hidden rounded-[var(--radius-card)] bg-surface-2', className)}
+      className={cn('relative w-full overflow-hidden rounded-2xl bg-surface-2', className)}
       // MapLibre's own controls are LTR; keep the canvas out of the RTL flip.
       dir="ltr"
     />

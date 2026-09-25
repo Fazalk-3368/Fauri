@@ -26,7 +26,7 @@ function NearbyJobCard({ job }: { job: NearbyJob }) {
     <Link href={`/jobs/${job.id}`} className="block">
       <Card
         className={cn(
-          'p-4 transition-shadow hover:shadow-[var(--shadow-lift)]',
+          'p-4 transition-shadow hover:shadow-lg',
           job.is_urgent && 'border-urgent/40',
         )}
       >
@@ -196,7 +196,7 @@ export function ProviderDashboard({
           <span
             className={cn(
               'relative grid size-10 place-items-center rounded-full',
-              isOnline ? 'bg-brand-soft text-brand' : 'bg-surface-2 text-muted',
+              isOnline ? 'bg-brand-soft text-brand-soft-fg' : 'bg-surface-2 text-muted',
             )}
           >
             <Radio className="size-5" />
@@ -235,7 +235,7 @@ export function ProviderDashboard({
             {dict.provider.activeJob}
           </h2>
           <Link href={`/jobs/${activeJob.id}`} className="block">
-            <Card className="border-brand/40 p-4 transition-shadow hover:shadow-[var(--shadow-lift)]">
+            <Card className="border-brand/40 p-4 transition-shadow hover:shadow-lg">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0">
                   <Badge tone="brand">{dict.job.status[activeJob.status]}</Badge>

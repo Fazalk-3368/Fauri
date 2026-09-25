@@ -83,7 +83,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
             <div
               key={toast.id}
               className={cn(
-                'animate-in-up pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-xl border bg-surface p-3.5 shadow-[var(--shadow-lift)]',
+                'animate-in-up pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-xl border bg-surface p-3.5 shadow-lg',
                 TONE_CLASS[toast.tone],
               )}
             >
