@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Crosshair } from 'lucide-react';
+import { Crosshair, Info } from 'lucide-react';
 import { MapCanvas } from './MapCanvas';
 import { Button } from '@/components/ui';
 import { useI18n } from '@/lib/i18n/provider';
@@ -83,7 +83,15 @@ export function LocationPicker({
           {locating ? dict.map.locating : dict.map.useMyLocation}
         </Button>
       </div>
-      {error && <p className="text-xs text-danger">{error}</p>}
+      {/* Not an error tone: the pin has already fallen back to a usable
+          position and dragging it is a perfectly good way to post a job.
+          Red text on a flow that still works reads as something broken. */}
+      {error && (
+        <p className="flex items-start gap-1.5 text-xs text-warn-soft-fg">
+          <Info className="mt-0.5 size-3.5 shrink-0" aria-hidden />
+          {error}
+        </p>
+      )}
       <p className="text-xs text-muted">{dict.job.locationHint}</p>
     </div>
   );
