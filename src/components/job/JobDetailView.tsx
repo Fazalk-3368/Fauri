@@ -137,6 +137,29 @@ export function JobDetailView({
   const canReview =
     job.status === 'completed' && !myReview && counterpart != null && (isCustomer || isAssignedProvider);
 
+  // Below lg the action rail is the second grid child, so every control that
+  // moves the job forward sits underneath the chat and the timeline: on a
+  // phone the primary action is simply off-screen. This bar puts exactly one
+  // action back in reach. Status changes fire directly; anything needing input
+  // brings the rail into view instead of duplicating its form.
+  const scrollToRail = () =>
+    document.getElementById('job-actions')?.scrollIntoView({ block: 'center' });
+
+  const primaryAction: { label: string; icon: React.ReactNode; onClick: () => void } | null =
+    isAssignedProvider && job.status === 'assigned'
+      ? { label: dict.provider.onMyWay, icon: <Truck className="size-4" />, onClick: () => setStatus('en_route') }
+      : isAssignedProvider && job.status === 'en_route'
+        ? { label: dict.provider.startWork, icon: <Wrench className="size-4" />, onClick: () => setStatus('in_progress') }
+        : isAssignedProvider && job.status === 'in_progress'
+          ? { label: dict.job.complete, icon: <CheckCircle2 className="size-4" />, onClick: scrollToRail }
+          : !isCustomer && job.status === 'open'
+            ? { label: myOffer ? dict.offer.update : dict.offer.make, icon: <Navigation className="size-4" />, onClick: scrollToRail }
+            : isCustomer && job.status === 'open'
+              ? { label: dict.job.offers, icon: <Navigation className="size-4" />, onClick: scrollToRail }
+              : canReview
+                ? { label: dict.review.submit, icon: <Star className="size-4" />, onClick: scrollToRail }
+                : null;
+
   return (
     <div className="space-y-6">
       <Dialog
@@ -283,7 +306,7 @@ export function JobDetailView({
         </div>
 
         {/* action rail */}
-        <div className="space-y-4 lg:sticky lg:top-24 lg:self-start">
+        <div id="job-actions" className="space-y-4 lg:sticky lg:top-24 lg:self-start">
           <ErrorNote>{error}</ErrorNote>
 
           {/* provider bidding on an open job */}
@@ -469,6 +492,17 @@ export function JobDetailView({
           )}
         </div>
       </div>
+
+      {primaryAction && (
+        <div className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-surface/95 px-4 py-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] backdrop-blur lg:hidden">
+          <div className="mx-auto max-w-lg">
+            <Button fullWidth size="lg" loading={busy} onClick={primaryAction.onClick}>
+              {primaryAction.icon}
+              {primaryAction.label}
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

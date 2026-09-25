@@ -8,7 +8,7 @@ import { createClient } from '@/lib/supabase/client';
 import { useI18n } from '@/lib/i18n/provider';
 import { useProviderLocation } from '@/lib/hooks/useProviderLocation';
 import { useToast } from '@/components/ui/toast';
-import { Badge, Button, Card, EmptyState } from '@/components/ui';
+import { Alert, Badge, Button, Card, EmptyState } from '@/components/ui';
 import { MapCanvas, type MapMarker } from '@/components/map/MapCanvas';
 import { cn, errorMessage, formatDistance, formatPkr } from '@/lib/utils';
 import type {
@@ -19,61 +19,63 @@ import type {
   ProviderProfile,
 } from '@/lib/types/database';
 
-function NearbyJobCard({ job }: { job: NearbyJob }) {
+function NearbyJobCard({ job, index }: { job: NearbyJob; index: number }) {
   const { dict, locale, fill } = useI18n();
 
   return (
     <Link href={`/jobs/${job.id}`} className="block">
       <Card
-        className={cn(
-          'p-4 transition-shadow hover:shadow-lg',
-          job.is_urgent && 'border-urgent/40',
-        )}
+        interactive
+        className={cn('animate-in-up p-4 sm:p-5', job.is_urgent && 'border-s-4 border-s-urgent')}
+        style={{ animationDelay: `${index * 45}ms` }}
       >
-        <div className="flex items-start justify-between gap-3">
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              {job.is_urgent && <Badge tone="urgent">{dict.job.urgent}</Badge>}
-              <span className="text-xs text-muted">
-                {locale === 'ur' ? job.category_ur : job.category_en}
-              </span>
-              <span className="text-xs text-muted">·</span>
-              <span className="inline-flex items-center gap-1 text-xs font-medium text-brand-ink">
-                <Navigation className="size-3" />
-                {formatDistance(job.distance_m, locale)}
-              </span>
-            </div>
-
-            <h3 className="mt-2 truncate font-semibold">{job.title}</h3>
-            <p className="mt-1 line-clamp-2 text-sm text-muted">{job.description}</p>
-            <p className="mt-2 flex items-center gap-1 truncate text-xs text-muted">
-              <MapPin className="size-3.5 shrink-0" />
-              {job.address_text}
-            </p>
-          </div>
-
-          <div className="shrink-0 text-end">
-            {job.budget_pkr != null && (
-              <p className="font-semibold">{formatPkr(job.budget_pkr, locale)}</p>
-            )}
-            {job.my_offer_id ? (
-              <Badge
-                tone={job.my_offer_status === 'pending' ? 'brand' : 'neutral'}
-                className="mt-1"
-              >
-                {dict.offer.yours}
-              </Badge>
-            ) : (
-              Number(job.offer_count) > 0 && (
-                <p className="mt-1 text-xs text-muted">
-                  {fill(dict.job.offersCount, { n: Number(job.offer_count) })}
-                </p>
-              )
-            )}
-          </div>
+        {/* Distance leads. It is the thing a tradesman actually decides on,
+            and it used to be a small run-in between the trade and a dot. */}
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-brand-soft px-2.5 py-1 text-xs font-semibold text-brand-soft-fg">
+            <Navigation className="size-3.5" aria-hidden />
+            {formatDistance(job.distance_m, locale)}
+          </span>
+          {job.is_urgent && (
+            <Badge tone="urgent">
+              <AlertTriangle className="size-3" aria-hidden />
+              {dict.job.urgent}
+            </Badge>
+          )}
+          <span className="text-xs text-muted">
+            {locale === 'ur' ? job.category_ur : job.category_en}
+          </span>
         </div>
 
-        <p className="mt-3 border-t border-border pt-2.5 text-xs text-muted">
+        <h3 className="mt-2.5 truncate text-xl font-semibold">{job.title}</h3>
+        <p className="mt-1.5 line-clamp-2 text-sm leading-relaxed text-muted">{job.description}</p>
+
+        <div className="mt-4 flex flex-wrap items-baseline gap-x-3 gap-y-1.5 border-t border-border pt-3.5">
+          {job.budget_pkr != null && (
+            <p className="text-money font-bold tabular-nums">
+              {formatPkr(job.budget_pkr, locale)}
+            </p>
+          )}
+
+          {job.my_offer_id ? (
+            <Badge tone={job.my_offer_status === 'pending' ? 'brand' : 'neutral'}>
+              {dict.offer.yours}
+            </Badge>
+          ) : (
+            Number(job.offer_count) > 0 && (
+              <span className="text-xs text-muted">
+                {fill(dict.job.offersCount, { n: Number(job.offer_count) })}
+              </span>
+            )
+          )}
+
+          <span className="ms-auto inline-flex items-center gap-1 truncate text-xs text-muted">
+            <MapPin className="size-3.5 shrink-0" aria-hidden />
+            {job.address_text}
+          </span>
+        </div>
+
+        <p className="mt-2.5 text-xs text-muted">
           {fill(dict.job.postedAt, {
             time: formatDistanceToNow(new Date(job.created_at), { addSuffix: true }),
           })}
@@ -189,28 +191,35 @@ export function ProviderDashboard({
   }, [jobs, position]);
 
   return (
-    <div className="space-y-6">
-      {/* online switch */}
-      <Card className="flex flex-wrap items-center gap-4 p-4">
-        <div className="flex items-center gap-3">
-          <span
-            className={cn(
-              'relative grid size-10 place-items-center rounded-full',
-              isOnline ? 'bg-brand-soft text-brand-soft-fg' : 'bg-surface-2 text-muted',
-            )}
-          >
-            <Radio className="size-5" />
-          </span>
-          <div>
-            <p className="font-semibold">
-              {isOnline ? dict.common.online : dict.common.offline}
-            </p>
-            <p className="text-xs text-muted">{dict.provider.onlineHint}</p>
-          </div>
+    <div className="space-y-6 sm:space-y-8">
+      {/* The online switch is the page hero: it is the one control that
+          defines a tradesman's day, so it gets the weight to match. */}
+      <Card
+        className={cn(
+          'flex flex-wrap items-center gap-4 p-5 transition-colors duration-200 sm:p-6',
+          isOnline ? 'border-brand/30 bg-brand-soft' : 'bg-surface-2',
+        )}
+      >
+        <span
+          className={cn(
+            'relative grid size-12 place-items-center rounded-full',
+            isOnline ? 'bg-surface text-brand-ink' : 'bg-surface text-muted',
+          )}
+        >
+          {isOnline && <span className="pulse-ring absolute inset-0 rounded-full text-brand" />}
+          <Radio className="relative size-6" />
+        </span>
+
+        <div className="min-w-0">
+          <p className="font-display text-xl font-semibold">
+            {isOnline ? dict.common.online : dict.common.offline}
+          </p>
+          <p className="mt-0.5 text-sm text-muted">{dict.provider.onlineHint}</p>
         </div>
 
         <Button
-          className="ms-auto"
+          className="ms-auto w-full sm:w-auto"
+          size="lg"
           variant={isOnline ? 'secondary' : 'primary'}
           loading={togglingOnline || locating}
           onClick={toggleOnline}
@@ -220,12 +229,11 @@ export function ProviderDashboard({
       </Card>
 
       {locationError && (
-        <Card className="flex items-start gap-3 border-danger/30 bg-danger-soft p-4">
-          <AlertTriangle className="mt-0.5 size-5 shrink-0 text-danger" />
-          <p className="text-sm text-danger">
-            {locationError === 'unsupported' ? dict.map.unsupported : dict.map.denied}
-          </p>
-        </Card>
+        <Alert
+          tone="danger"
+          icon={AlertTriangle}
+          title={locationError === 'unsupported' ? dict.map.unsupported : dict.map.denied}
+        />
       )}
 
       {/* the job they are already on */}
@@ -255,13 +263,13 @@ export function ProviderDashboard({
       )}
 
       {/* feed */}
-      <section className="space-y-3">
+      <section className="space-y-4">
         <div className="flex items-center justify-between gap-3">
-          <h1 className="text-2xl font-bold">{dict.provider.feedTitle}</h1>
-          {jobs.length > 0 && (
-            <span className="text-sm text-muted">
-              {fill(dict.job.offersCount, { n: jobs.length })}
-            </span>
+          <h1 className="font-display text-2xl font-semibold sm:text-3xl">
+            {dict.provider.feedTitle}
+          </h1>
+          {isOnline && jobs.length > 0 && (
+            <Badge tone="brand">{fill(dict.job.offersCount, { n: jobs.length })}</Badge>
           )}
         </div>
 
@@ -270,21 +278,35 @@ export function ProviderDashboard({
             icon={Radio}
             title={dict.provider.offlineNotice}
             action={
-              <Button onClick={toggleOnline} loading={togglingOnline || locating}>
+              <Button size="lg" onClick={toggleOnline} loading={togglingOnline || locating}>
                 {dict.provider.goOnline}
               </Button>
             }
           />
-        ) : jobs.length === 0 ? (
-          <EmptyState icon={Search} title={dict.provider.noJobs} body={dict.provider.noJobsHint} />
         ) : (
           <>
-            <MapCanvas className="h-56" markers={markers} center={position} fitMarkers zoom={13} />
-            <div className="space-y-3">
-              {jobs.map((job) => (
-                <NearbyJobCard key={job.id} job={job} />
-              ))}
-            </div>
+            {/* Shown whenever online, not only when jobs exist. "You are here,
+                nothing nearby yet" is far more reassuring than an empty box. */}
+            <MapCanvas
+              className="h-52 sm:h-64"
+              markers={markers}
+              center={position}
+              fitMarkers={markers.length > 1}
+              zoom={13}
+            />
+            {jobs.length === 0 ? (
+              <EmptyState
+                icon={Search}
+                title={dict.provider.noJobs}
+                body={dict.provider.noJobsHint}
+              />
+            ) : (
+              <div className="space-y-3">
+                {jobs.map((job, i) => (
+                  <NearbyJobCard key={job.id} job={job} index={i} />
+                ))}
+              </div>
+            )}
           </>
         )}
       </section>
