@@ -17,9 +17,9 @@ The web app is feature-complete and builds clean. The schema is **applied and
 verified** against a live Supabase project (Postgres 17.6, PostGIS 3.3.7):
 
 - The first 8 migrations apply cleanly from empty — 11 tables, 24 RLS policies,
-  23 functions, 18 triggers, 31 indexes, 10 seeded trades. A 9th was added
-  after an authorization audit (see [Schema map](#schema-map)) and has **not**
-  yet been applied to the live project.
+  23 functions, 18 triggers, 31 indexes, 10 seeded trades. Two more came out of
+  an authorization audit (see [Schema map](#schema-map)); both are applied, and
+  each change was confirmed by querying `pg_proc` and `pg_policies` afterwards.
 - The full lifecycle passes end to end: signup trigger → provider goes online →
   customer posts → **matcher fires with correct geography distance** → bid →
   accept → en route → in progress → complete → commission ledger → review
@@ -125,7 +125,8 @@ You need two accounts in two browsers (or one plus a private window):
 | `…090500_realtime_and_seed` | Realtime publication, 10 trade categories |
 | `…090600_coordinates_and_create_job` | Generated `lat`/`lng`, `create_job`, `job_detail` |
 | `…090700_customer_jobs` | The customer's job list in one round trip |
-| `…20260925_tighten_authorization` | Closes three self-granted-access gaps found by audit |
+| `…20260925090000_tighten_authorization` | Closes three self-granted-access gaps found by audit |
+| `…20260925100000_audit_followups` | Revokes the provider-location scan, fixes a NULL-blind guard, lets a withdrawn offer be revived |
 
 ### Security posture
 
@@ -144,6 +145,12 @@ You need two accounts in two browsers (or one plus a private window):
   still `open`. Once the customer picks someone, the job's address stops being
   readable by everyone who happened to be pinged, and the chat closes to
   everyone but the two parties.
+- Tradesmen's live coordinates are not queryable. `nearby_providers()` exists for
+  a future customer-facing map but has no `execute` grant, because an arbitrary
+  point plus a radius is a scraper's tool until something bounds the search.
+- Database errors reach the user only when our own RPCs wrote the message.
+  Constraint, column and RLS failures fall back to a generic string rather than
+  naming the schema.
 
 ## Known gaps
 
@@ -163,3 +170,8 @@ These are deliberate omissions, not oversights:
 - **No automated tests.**
 - **Jobs never expire.** The `expired` status exists but nothing sets it; a cron
   job should close stale open jobs.
+- **The job's final amount is self-reported.** `complete_job()` takes whatever
+  figure the closing party passes, so a provider can settle a PKR 5,000 job at
+  500 and shrink the platform's cut to match. Cash changing hands offline makes
+  this hard to solve outright, but defaulting to the accepted offer price and
+  making the customer confirm any reduction would close the easy version.
