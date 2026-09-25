@@ -16,8 +16,10 @@ Think inDrive, for electricians and plumbers.
 The web app is feature-complete and builds clean. The schema is **applied and
 verified** against a live Supabase project (Postgres 17.6, PostGIS 3.3.7):
 
-- All 8 migrations apply cleanly from empty — 11 tables, 24 RLS policies,
-  23 functions, 18 triggers, 31 indexes, 10 seeded trades.
+- The first 8 migrations apply cleanly from empty — 11 tables, 24 RLS policies,
+  23 functions, 18 triggers, 31 indexes, 10 seeded trades. A 9th was added
+  after an authorization audit (see [Schema map](#schema-map)) and has **not**
+  yet been applied to the live project.
 - The full lifecycle passes end to end: signup trigger → provider goes online →
   customer posts → **matcher fires with correct geography distance** → bid →
   accept → en route → in progress → complete → commission ledger → review
@@ -123,6 +125,7 @@ You need two accounts in two browsers (or one plus a private window):
 | `…090500_realtime_and_seed` | Realtime publication, 10 trade categories |
 | `…090600_coordinates_and_create_job` | Generated `lat`/`lng`, `create_job`, `job_detail` |
 | `…090700_customer_jobs` | The customer's job list in one round trip |
+| `…20260925_tighten_authorization` | Closes three self-granted-access gaps found by audit |
 
 ### Security posture
 
@@ -132,7 +135,15 @@ You need two accounts in two browsers (or one plus a private window):
   and a customer cannot flip a job to `completed` to dodge the commission ledger.
 - Every status change goes through a `SECURITY DEFINER` RPC with an explicit
   `search_path = ''` and fully-qualified references.
-- Phone numbers are only readable by someone who shares a job with you.
+- `role` comes from an allowlist in the signup trigger, never from the signup
+  metadata the browser sent, so `admin` cannot be self-served.
+- Phone numbers are only readable by the two people actually assigned to a job.
+  Bidding does not earn them — a losing bidder's view of the customer is
+  whatever `job_detail()` chooses to return, field by field.
+- The matcher's notification row lets a provider open a job only while it is
+  still `open`. Once the customer picks someone, the job's address stops being
+  readable by everyone who happened to be pinged, and the chat closes to
+  everyone but the two parties.
 
 ## Known gaps
 

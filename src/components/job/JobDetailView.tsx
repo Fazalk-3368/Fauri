@@ -115,7 +115,13 @@ export function JobDetailView({
     toast.success(dict.job.status.completed);
   };
 
-  const canChat = isActive(job.status) && (isCustomer || isAssignedProvider || !!myOffer);
+  // Mirrors can_view_job_chat(): once the customer has picked someone, the
+  // conversation closes to the providers who bid and lost.
+  const canChat =
+    isActive(job.status) &&
+    (isCustomer ||
+      isAssignedProvider ||
+      (!job.assigned_provider_id && myOffer?.status === 'pending'));
   const canReview =
     job.status === 'completed' && !myReview && counterpart != null && (isCustomer || isAssignedProvider);
 
