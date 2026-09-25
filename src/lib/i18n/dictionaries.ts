@@ -125,6 +125,8 @@ export const en = {
     completing: 'Closing…',
     finalAmount: 'Final amount paid (PKR)',
     completeHint: 'Confirm the cash amount actually handed over.',
+    agreedHint: 'Agreed: {price}. Enter more if the work grew — anything less has to be closed by the customer.',
+    belowAgreed: 'Only the customer can close this job for less than {price}. Ask them to confirm the lower amount.',
     postedAt: 'Posted {time}',
     status: {
       open: 'Open',
@@ -342,6 +344,8 @@ export const ur: Mirror<Dictionary> = {
     completing: 'بند کیا جا رہا ہے…',
     finalAmount: 'ادا کی گئی حتمی رقم (روپے)',
     completeHint: 'جو نقد رقم واقعی ادا ہوئی اس کی تصدیق کریں۔',
+    agreedHint: 'طے شدہ: {price}۔ کام بڑھ گیا ہو تو زیادہ درج کریں — اس سے کم پر صرف گاہک ہی کام بند کر سکتا ہے۔',
+    belowAgreed: 'صرف گاہک ہی یہ کام {price} سے کم پر بند کر سکتا ہے۔ اُن سے کم رقم کی تصدیق کرائیں۔',
     postedAt: '{time} پوسٹ ہوا',
     status: {
       open: 'کھلا',

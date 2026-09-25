@@ -102,10 +102,18 @@ export function JobDetailView({
     await run(() => createClient().rpc('cancel_job', { p_job_id: job.id, p_reason: reason }));
   };
 
+  // What the winning bid was. complete_job() lets the provider settle at or
+  // above it, but only the customer may close below.
+  const agreed = job.final_amount_pkr == null ? null : Number(job.final_amount_pkr);
+
   const complete = async () => {
     const amount = Number(finalAmount);
     if (!amount || amount <= 0) {
       setError(dict.job.completeHint);
+      return;
+    }
+    if (isAssignedProvider && agreed != null && amount < agreed) {
+      setError(fill(dict.job.belowAgreed, { price: formatPkr(agreed, locale) }));
       return;
     }
     await run(() =>
@@ -293,13 +301,17 @@ export function JobDetailView({
                   <Field
                     label={dict.job.finalAmount}
                     htmlFor="final"
-                    hint={dict.job.completeHint}
+                    hint={
+                      agreed != null
+                        ? fill(dict.job.agreedHint, { price: formatPkr(agreed, locale) })
+                        : dict.job.completeHint
+                    }
                     required
                   >
                     <Input
                       id="final"
                       type="number"
-                      min={1}
+                      min={agreed ?? 1}
                       step={1}
                       value={finalAmount}
                       onChange={(e) => setFinalAmount(e.target.value)}
