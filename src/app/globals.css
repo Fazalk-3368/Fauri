@@ -2,78 +2,202 @@
 
 /* ---------------------------------------------------------------------------
    Fauri design tokens
-   Green reads as "go" and is culturally at home in Pakistan; amber is reserved
-   strictly for emergencies so an urgent job is never mistaken for a normal one.
+
+   Warmth comes from the neutral substrate (hue 60-75, sand) rather than from
+   the accent. That matters because the accent quadrant is constrained: the
+   product shows four hues at once and --urgent sits at 58, --danger at 25, so
+   an orange brand would land ~10deg from "emergency" and ~18deg from "error".
+   Brand is plum at 338, which clears every other accent by 45deg or more.
+
+   Colours use light-dark() so each token is declared once. The dark theme
+   cannot drift from the light one because they are the same line.
 --------------------------------------------------------------------------- */
 :root {
-  --bg: oklch(0.985 0.004 140);
-  --surface: oklch(1 0 0);
-  --surface-2: oklch(0.965 0.006 140);
-  --border: oklch(0.905 0.008 140);
-  --fg: oklch(0.23 0.02 155);
-  --muted: oklch(0.52 0.018 155);
-  --brand: oklch(0.56 0.135 160);
-  --brand-hover: oklch(0.5 0.135 160);
-  --brand-soft: oklch(0.94 0.04 160);
-  --brand-fg: oklch(0.99 0 0);
-  --urgent: oklch(0.67 0.17 55);
-  --urgent-soft: oklch(0.95 0.05 65);
-  --danger: oklch(0.57 0.2 27);
-  --danger-soft: oklch(0.95 0.04 27);
-  --info: oklch(0.58 0.13 250);
-  --ring: oklch(0.56 0.135 160 / 0.45);
-  --shadow-color: 155 25% 12%;
+  color-scheme: light dark;
+
+  --bg:            light-dark(oklch(0.986 0.005 75),  oklch(0.168 0.009 60));
+  --surface:       light-dark(oklch(1 0 0),           oklch(0.213 0.010 60));
+  --surface-2:     light-dark(oklch(0.966 0.008 75),  oklch(0.258 0.011 60));
+  --surface-3:     light-dark(oklch(0.940 0.010 75),  oklch(0.300 0.012 60));
+  --border:        light-dark(oklch(0.908 0.009 70),  oklch(0.320 0.012 60));
+  --border-strong: light-dark(oklch(0.855 0.012 70),  oklch(0.395 0.014 60));
+  --fg:            light-dark(oklch(0.220 0.015 60),  oklch(0.960 0.005 75));
+  --muted:         light-dark(oklch(0.520 0.016 60),  oklch(0.725 0.013 75));
+  --placeholder:   light-dark(oklch(0.600 0.014 60),  oklch(0.620 0.013 75));
+
+  --brand:          light-dark(oklch(0.510 0.160 338), oklch(0.730 0.145 340));
+  --brand-hover:    light-dark(oklch(0.450 0.160 338), oklch(0.795 0.120 340));
+  --brand-active:   light-dark(oklch(0.400 0.150 338), oklch(0.840 0.100 340));
+  --brand-soft:     light-dark(oklch(0.958 0.026 338), oklch(0.300 0.075 340));
+  --brand-soft-fg:  light-dark(oklch(0.420 0.150 338), oklch(0.860 0.100 340));
+  --brand-fg:       light-dark(oklch(0.995 0.004 338), oklch(0.155 0.030 340));
+
+  --urgent:         light-dark(oklch(0.700 0.175 58),  oklch(0.790 0.155 62));
+  --urgent-hover:   light-dark(oklch(0.640 0.175 55),  oklch(0.845 0.130 62));
+  --urgent-soft:    light-dark(oklch(0.958 0.045 68),  oklch(0.315 0.065 60));
+  --urgent-soft-fg: light-dark(oklch(0.430 0.130 50),  oklch(0.875 0.115 65));
+  --urgent-fg:      light-dark(oklch(0.240 0.050 55),  oklch(0.200 0.040 55));
+
+  /* --urgent used to carry emergencies, star ratings and "commission due" at
+     once. --warn and --star split those off so amber means one thing. */
+  --warn:           light-dark(oklch(0.740 0.150 82),  oklch(0.830 0.140 85));
+  --warn-soft:      light-dark(oklch(0.962 0.040 85),  oklch(0.320 0.055 82));
+  --warn-soft-fg:   light-dark(oklch(0.440 0.110 70),  oklch(0.890 0.105 85));
+
+  --danger:         light-dark(oklch(0.545 0.205 25),  oklch(0.700 0.175 25));
+  --danger-hover:   light-dark(oklch(0.480 0.205 25),  oklch(0.765 0.150 25));
+  --danger-soft:    light-dark(oklch(0.958 0.035 25),  oklch(0.295 0.075 25));
+  --danger-soft-fg: light-dark(oklch(0.440 0.175 25),  oklch(0.840 0.120 25));
+  --danger-fg:      light-dark(oklch(0.995 0.004 25),  oklch(0.160 0.035 25));
+
+  /* The old brand green, repurposed to where a green actually belongs. */
+  --success:         light-dark(oklch(0.560 0.135 150), oklch(0.720 0.130 152));
+  --success-soft:    light-dark(oklch(0.955 0.035 150), oklch(0.290 0.055 152));
+  --success-soft-fg: light-dark(oklch(0.400 0.110 150), oklch(0.850 0.100 152));
+  --success-fg:      light-dark(oklch(0.995 0 0),       oklch(0.155 0.025 152));
+
+  --info:           light-dark(oklch(0.550 0.125 250), oklch(0.705 0.115 250));
+  --info-soft:      light-dark(oklch(0.955 0.030 250), oklch(0.295 0.060 250));
+  --info-soft-fg:   light-dark(oklch(0.420 0.120 250), oklch(0.845 0.090 250));
+  --info-fg:        light-dark(oklch(0.995 0 0),       oklch(0.155 0.025 250));
+
+  --star:       light-dark(oklch(0.760 0.150 80), oklch(0.820 0.140 82));
+  --star-empty: light-dark(oklch(0.880 0.012 70), oklch(0.360 0.012 70));
+
+  /* Opaque on purpose: outline-offset puts the ring on the surrounding surface,
+     so it needs contrast against --bg and --brand-soft, not against the fill. */
+  --ring: light-dark(oklch(0.420 0.160 338), oklch(0.860 0.090 340));
+
+  /* Map pins are deliberately NOT themed. The OSM raster basemap is light in
+     both colour schemes, so a pin that darkened for dark mode would vanish. */
+  --map-pin-job:      oklch(0.510 0.160 338);
+  --map-pin-urgent:   oklch(0.610 0.200 38);
+  --map-pin-provider: oklch(0.520 0.140 250);
+  --map-pin-self:     oklch(0.250 0.020 60);
+  --map-pin-ring:     oklch(1 0 0);
+  --map-label-bg:     oklch(1 0 0 / 0.94);
+  --map-label-fg:     oklch(0.220 0.015 60);
+
+  --ease-out:  cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in:   cubic-bezier(0.55, 0, 1, 0.45);
+  --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-1: 120ms;
+  --dur-2: 200ms;
+  --dur-3: 320ms;
+  --dur-4: 600ms;
+
+  /* Phase 0 aliases. Twelve call sites still use rounded-[var(--radius-card)]
+     and shadow-[var(--shadow-soft|lift)]; these keep them resolving until
+     Phase 1 moves them onto the named utilities. Delete all three then. */
+  --radius-card: var(--radius-2xl);
+  --shadow-soft: var(--shadow-sm);
+  --shadow-lift: var(--shadow-lg);
 }
 
+/* --shadow-color is a bare HSL triplet, not a <color>, so it cannot go through
+   light-dark(). It stays the one media-queried token. */
+:root {
+  --shadow-color: 40 22% 18%;
+}
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: oklch(0.175 0.014 160);
-    --surface: oklch(0.215 0.016 160);
-    --surface-2: oklch(0.255 0.018 160);
-    --border: oklch(0.315 0.018 160);
-    --fg: oklch(0.96 0.008 150);
-    --muted: oklch(0.71 0.018 150);
-    --brand: oklch(0.72 0.145 160);
-    --brand-hover: oklch(0.78 0.145 160);
-    --brand-soft: oklch(0.3 0.05 160);
-    --brand-fg: oklch(0.17 0.02 160);
-    --urgent: oklch(0.78 0.15 60);
-    --urgent-soft: oklch(0.32 0.06 60);
-    --danger: oklch(0.68 0.18 27);
-    --danger-soft: oklch(0.31 0.07 27);
-    --info: oklch(0.7 0.12 250);
-    --ring: oklch(0.72 0.145 160 / 0.5);
-    --shadow-color: 160 40% 3%;
+    --shadow-color: 40 30% 2%;
   }
 }
 
+/* Colour and font tokens stay `inline` so utilities emit var() references and
+   keep resolving through light-dark() at use time. */
 @theme inline {
   --color-bg: var(--bg);
   --color-surface: var(--surface);
   --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
   --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
   --color-fg: var(--fg);
   --color-muted: var(--muted);
+  --color-placeholder: var(--placeholder);
+
   --color-brand: var(--brand);
   --color-brand-hover: var(--brand-hover);
+  --color-brand-active: var(--brand-active);
   --color-brand-soft: var(--brand-soft);
+  --color-brand-soft-fg: var(--brand-soft-fg);
   --color-brand-fg: var(--brand-fg);
+
   --color-urgent: var(--urgent);
+  --color-urgent-hover: var(--urgent-hover);
   --color-urgent-soft: var(--urgent-soft);
+  --color-urgent-soft-fg: var(--urgent-soft-fg);
+  --color-urgent-fg: var(--urgent-fg);
+
+  --color-warn: var(--warn);
+  --color-warn-soft: var(--warn-soft);
+  --color-warn-soft-fg: var(--warn-soft-fg);
+
   --color-danger: var(--danger);
+  --color-danger-hover: var(--danger-hover);
   --color-danger-soft: var(--danger-soft);
+  --color-danger-soft-fg: var(--danger-soft-fg);
+  --color-danger-fg: var(--danger-fg);
+
+  --color-success: var(--success);
+  --color-success-soft: var(--success-soft);
+  --color-success-soft-fg: var(--success-soft-fg);
+  --color-success-fg: var(--success-fg);
+
   --color-info: var(--info);
+  --color-info-soft: var(--info-soft);
+  --color-info-soft-fg: var(--info-soft-fg);
+  --color-info-fg: var(--info-fg);
 
-  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
-  --font-urdu: var(--font-noto-urdu), var(--font-geist-sans), sans-serif;
+  --color-star: var(--star);
+  --color-star-empty: var(--star-empty);
+  --color-ring: var(--ring);
 
-  --radius-card: 1rem;
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), var(--font-jakarta), sans-serif;
+  --font-urdu: var(--font-noto-urdu), var(--font-jakarta), sans-serif;
+}
 
-  --shadow-soft: 0 1px 2px hsl(var(--shadow-color) / 0.06),
-                 0 4px 16px -4px hsl(var(--shadow-color) / 0.08);
-  --shadow-lift: 0 2px 4px hsl(var(--shadow-color) / 0.08),
-                 0 12px 32px -8px hsl(var(--shadow-color) / 0.16);
+/* Radius, shadow and type override Tailwind's BUILT-IN namespaces, so every
+   existing rounded-xl / shadow-sm / text-sm call site adopts the new scale
+   with no edit. That is why there is no broken intermediate state. */
+@theme {
+  --radius-xs: 0.375rem;
+  --radius-sm: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.125rem;  /* controls: buttons, inputs, pills, chips, toast */
+  --radius-2xl: 1.5rem;   /* surfaces: cards, dropdown, map, chat panel */
+  --radius-3xl: 2rem;     /* hero panels, bottom sheets */
+
+  --shadow-2xs: 0 1px 1px hsl(var(--shadow-color) / 0.04);
+  --shadow-xs:  0 1px 2px hsl(var(--shadow-color) / 0.05);
+  --shadow-sm:  0 1px 2px hsl(var(--shadow-color) / 0.06),
+                0 4px 16px -4px hsl(var(--shadow-color) / 0.08);
+  --shadow-md:  0 2px 4px hsl(var(--shadow-color) / 0.07),
+                0 8px 24px -6px hsl(var(--shadow-color) / 0.12);
+  --shadow-lg:  0 2px 4px hsl(var(--shadow-color) / 0.08),
+                0 12px 32px -8px hsl(var(--shadow-color) / 0.16);
+  --shadow-xl:  0 4px 8px hsl(var(--shadow-color) / 0.10),
+                0 24px 56px -12px hsl(var(--shadow-color) / 0.22);
+
+  /* line-height: inherit is load-bearing. Tailwind's text-* utilities normally
+     emit their own line-height, which beat the inherited value and left the
+     whole Urdu app at Latin leading. Deferring to the cascade is what lets the
+     [dir="rtl"] rule below actually reach every element. */
+  --text-xs: 0.75rem;      --text-xs--line-height: inherit;
+  --text-sm: 0.8125rem;    --text-sm--line-height: inherit;
+  --text-base: 0.9375rem;  --text-base--line-height: inherit;
+  --text-lg: 1.0625rem;    --text-lg--line-height: inherit;
+  --text-xl: 1.25rem;      --text-xl--line-height: inherit;
+  --text-2xl: 1.75rem;     --text-2xl--line-height: inherit;
+  --text-3xl: 2rem;        --text-3xl--line-height: inherit;
+  --text-4xl: 2.5rem;      --text-4xl--line-height: inherit;
+  --text-5xl: 3rem;        --text-5xl--line-height: inherit;
+  --text-6xl: 3.5rem;      --text-6xl--line-height: inherit;
+  --text-money: 1.5rem;    --text-money--line-height: 1.1;
 }
 
 * {
@@ -83,6 +207,11 @@
 body {
   background: var(--bg);
   color: var(--fg);
+  line-height: 1.55;
+}
+
+:is(h1, h2, h3) {
+  line-height: 1.22;
 }
 
 /* Urdu is set in Nastaliq, which needs far more vertical room than Latin. */
@@ -90,10 +219,18 @@ body {
   font-family: var(--font-urdu);
   line-height: 2.1;
 }
+[dir="rtl"] :is(h1, h2, h3) {
+  line-height: 1.7;
+}
 [dir="rtl"] input,
 [dir="rtl"] textarea,
 [dir="rtl"] button {
   line-height: 1.9;
+}
+/* Bricolage ships no Arabic subset, so a display headline in Urdu would fall
+   back to broken shaping. Send it to Nastaliq instead. */
+[dir="rtl"] .font-display {
+  font-family: var(--font-urdu);
 }
 
 ::selection {
@@ -102,7 +239,7 @@ body {
 }
 
 :where(a, button, input, textarea, select, [tabindex]):focus-visible {
-  outline: 2px solid var(--brand);
+  outline: 2px solid var(--ring);
   outline-offset: 2px;
 }
 
@@ -131,7 +268,7 @@ body {
   opacity: 0.65;
 }
 .maplibregl-ctrl-group {
-  border-radius: 0.6rem !important;
+  border-radius: var(--radius-sm) !important;
   overflow: hidden;
 }
 
@@ -145,8 +282,8 @@ body {
   position: absolute;
   inset: 0;
   border-radius: 9999px;
-  background: var(--brand);
-  animation: fauri-pulse 2s ease-out infinite;
+  background: currentColor;
+  animation: fauri-pulse 2s var(--ease-out) infinite;
 }
 
 @keyframes fauri-in {
@@ -154,5 +291,37 @@ body {
   to { opacity: 1; transform: none; }
 }
 .animate-in-up {
-  animation: fauri-in 0.24s ease-out both;
+  animation: fauri-in var(--dur-3) var(--ease-out) both;
+}
+
+@keyframes fauri-out {
+  from { opacity: 1; transform: none; }
+  to { opacity: 0; transform: translateY(4px) scale(0.98); }
+}
+.animate-out-down {
+  animation: fauri-out var(--dur-2) var(--ease-in) both;
+}
+
+@keyframes fauri-pop {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.28); }
+  100% { transform: scale(1); }
+}
+.animate-pop {
+  animation: fauri-pop var(--dur-3) var(--ease-out);
+}
+
+@keyframes fauri-shimmer {
+  from { background-position: 200% 0; }
+  to { background-position: -200% 0; }
+}
+.skeleton {
+  background-image: linear-gradient(
+    90deg,
+    var(--surface-2) 0%,
+    var(--surface-3) 50%,
+    var(--surface-2) 100%
+  );
+  background-size: 200% 100%;
+  animation: fauri-shimmer 1.4s linear infinite;
 }

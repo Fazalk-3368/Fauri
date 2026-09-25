@@ -1,12 +1,28 @@
 import type { Metadata, Viewport } from 'next';
-import { Geist, Geist_Mono, Noto_Nastaliq_Urdu } from 'next/font/google';
+import { Plus_Jakarta_Sans, Bricolage_Grotesque, Noto_Nastaliq_Urdu } from 'next/font/google';
 import { I18nProvider } from '@/lib/i18n/provider';
 import { ToastProvider } from '@/components/ui/toast';
 import { getLocale } from '@/lib/i18n/server';
+import { THEME_COLOR_DARK, THEME_COLOR_LIGHT } from '@/lib/theme';
 import './globals.css';
 
-const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
-const geistMono = Geist_Mono({ variable: '--font-geist-mono', subsets: ['latin'] });
+const jakarta = Plus_Jakarta_Sans({
+  variable: '--font-jakarta',
+  subsets: ['latin'],
+  display: 'swap',
+});
+
+// Display face for the landing hero and page titles. One weight and no preload:
+// Nastaliq at two weights is already a heavy download for the target market.
+// globals.css routes RTL headlines away from this face, which has no Arabic.
+const bricolage = Bricolage_Grotesque({
+  variable: '--font-bricolage',
+  subsets: ['latin'],
+  weight: ['700'],
+  display: 'swap',
+  preload: false,
+});
+
 const notoUrdu = Noto_Nastaliq_Urdu({
   variable: '--font-noto-urdu',
   subsets: ['arabic'],
@@ -15,7 +31,7 @@ const notoUrdu = Noto_Nastaliq_Urdu({
 });
 
 export const metadata: Metadata = {
-  title: 'Fauri — Emergency tradesmen, always at your service',
+  title: 'Fauri: emergency tradesmen, always at your service',
   description:
     'Find electricians, plumbers and technicians working near you right now, even after the shops close.',
   applicationName: 'Fauri',
@@ -23,8 +39,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: '(prefers-color-scheme: light)', color: '#fbfdfa' },
-    { media: '(prefers-color-scheme: dark)', color: '#15201c' },
+    { media: '(prefers-color-scheme: light)', color: THEME_COLOR_LIGHT },
+    { media: '(prefers-color-scheme: dark)', color: THEME_COLOR_DARK },
   ],
   width: 'device-width',
   initialScale: 1,
@@ -38,7 +54,7 @@ export default async function RootLayout({ children }: LayoutProps<'/'>) {
     <html
       lang={locale}
       dir={locale === 'ur' ? 'rtl' : 'ltr'}
-      className={`${geistSans.variable} ${geistMono.variable} ${notoUrdu.variable} h-full antialiased`}
+      className={`${jakarta.variable} ${bricolage.variable} ${notoUrdu.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full flex flex-col bg-bg text-fg">
