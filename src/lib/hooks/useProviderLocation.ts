@@ -76,5 +76,23 @@ export function useProviderLocation(isOnline: boolean) {
     return () => navigator.geolocation.clearWatch(watchId);
   }, [isOnline, push]);
 
-  return { position, error, locating, requestLocation };
+  /**
+   * Accept a position the provider placed by hand. Needed because automatic
+   * location can fail outright on a device with no GPS: the browser asks a
+   * Wi-Fi database, and that database has thin coverage in this market, so a
+   * tradesman on a desktop could otherwise never go online at all.
+   */
+  const setManualPosition = useCallback(
+    async (next: LatLng) => {
+      setPosition(next);
+      setError(null);
+      // Clear the throttle so a deliberate placement always reaches the server,
+      // even if it lands within the movement threshold of the last push.
+      lastPushed.current = null;
+      await push(next);
+    },
+    [push],
+  );
+
+  return { position, error, locating, requestLocation, setManualPosition };
 }

@@ -10,6 +10,8 @@ import { useProviderLocation } from '@/lib/hooks/useProviderLocation';
 import { useToast } from '@/components/ui/toast';
 import { Alert, Badge, Button, Card, EmptyState } from '@/components/ui';
 import { MapCanvas, type MapMarker } from '@/components/map/MapCanvas';
+import { LocationPicker } from '@/components/map/LocationPicker';
+import { DEFAULT_CENTER, type LatLng } from '@/lib/map';
 import { cn, errorMessage, formatDistance, formatPkr } from '@/lib/utils';
 import type {
   AppNotification,
@@ -104,8 +106,10 @@ export function ProviderDashboard({
   const [jobs, setJobs] = useState<NearbyJob[]>(initialJobs);
   const [activeJob, setActiveJob] = useState<Job | null>(initialActiveJob);
 
-  const { position, error: locationError, locating, requestLocation } =
+  const { position, error: locationError, locating, requestLocation, setManualPosition } =
     useProviderLocation(isOnline);
+  const [manualOpen, setManualOpen] = useState(false);
+  const [manualPos, setManualPos] = useState<LatLng | null>(null);
 
   const loadFeed = useCallback(async () => {
     const supabase = createClient();
@@ -150,6 +154,21 @@ export function ProviderDashboard({
     };
   }, [profile.id, loadFeed]);
 
+  const setOnlineFlag = async (next: boolean) => {
+    const { error } = await createClient()
+      .from('provider_profiles')
+      .update({ is_online: next })
+      .eq('user_id', profile.id);
+
+    if (error) {
+      toast.error(errorMessage(error, dict.common.error));
+      return false;
+    }
+    setIsOnline(next);
+    if (next) void loadFeed();
+    return true;
+  };
+
   const toggleOnline = async () => {
     setTogglingOnline(true);
     const next = !isOnline;
@@ -158,24 +177,30 @@ export function ProviderDashboard({
     if (next) {
       const pos = await requestLocation();
       if (!pos) {
-        // No toast: the alert below already names the actual failure, and this
-        // one hardcoded "permission denied" regardless of the real cause.
+        // Offer to place the pin by hand rather than dead-ending. Automatic
+        // location fails outright on a device with no GPS when the Wi-Fi
+        // database has no entry for the area, which is common here.
+        //
+        // Seed the pin so the confirm button is live straight away: the picker
+        // renders at the city default, and leaving state null would disable
+        // confirm until the pin was dragged, even when the default is right.
+        setManualPos((current) => current ?? position ?? DEFAULT_CENTER);
+        setManualOpen(true);
         setTogglingOnline(false);
         return;
       }
     }
 
-    const { error } = await createClient()
-      .from('provider_profiles')
-      .update({ is_online: next })
-      .eq('user_id', profile.id);
+    await setOnlineFlag(next);
+    setTogglingOnline(false);
+  };
 
-    if (error) {
-      toast.error(errorMessage(error, dict.common.error));
-    } else {
-      setIsOnline(next);
-      if (next) void loadFeed();
-    }
+  const confirmManualLocation = async () => {
+    if (!manualPos) return;
+    setTogglingOnline(true);
+    await setManualPosition(manualPos);
+    const ok = await setOnlineFlag(true);
+    if (ok) setManualOpen(false);
     setTogglingOnline(false);
   };
 
@@ -229,12 +254,47 @@ export function ProviderDashboard({
         </Button>
       </Card>
 
-      {locationError && (
-        <Alert
-          tone="danger"
-          icon={AlertTriangle}
-          title={dict.map[locationError]}
-        />
+      {locationError && !manualOpen && (
+        <Alert tone="warn" icon={AlertTriangle} title={dict.map[locationError]} />
+      )}
+
+      {/* Rendered inline rather than in a dialog: MapLibre needs real
+          dimensions when it initialises, and a modal that is display:none on
+          first paint gives it a zero-sized container. */}
+      {manualOpen && (
+        <Card className="space-y-4 p-5 sm:p-6">
+          <div>
+            <h2 className="font-display text-lg font-semibold">
+              {dict.provider.setLocationTitle}
+            </h2>
+            <p className="mt-1 text-sm leading-relaxed text-muted">
+              {dict.provider.setLocationHint}
+            </p>
+          </div>
+
+          <LocationPicker
+            value={manualPos}
+            onChange={setManualPos}
+            // Do not re-run the lookup that just failed; the pin starts at the
+            // city default and the provider drags it.
+            autoLocate={false}
+            className="h-56 sm:h-72"
+          />
+
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <Button
+              size="lg"
+              loading={togglingOnline}
+              disabled={!manualPos}
+              onClick={confirmManualLocation}
+            >
+              {dict.provider.useThisLocation}
+            </Button>
+            <Button size="lg" variant="ghost" onClick={() => setManualOpen(false)}>
+              {dict.common.cancel}
+            </Button>
+          </div>
+        </Card>
       )}
 
       {/* the job they are already on */}
