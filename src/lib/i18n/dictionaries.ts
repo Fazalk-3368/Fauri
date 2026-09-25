@@ -62,6 +62,84 @@ export const en = {
       'Go online, set how far you travel, and jobs near you arrive with the price already on the table. Keep the cash, settle the platform share later.',
     previewJobTitle: 'Kitchen pipe burst, water spreading',
     previewJobArea: 'Gulberg III, Lahore',
+
+    marquee1: 'Cash at the door',
+    marquee2: 'Every tradesman in range, pinged at once',
+    marquee3: 'You choose the price',
+    marquee4: 'No booking fee',
+    marquee5: 'Works after the shops shut',
+    marquee6: 'Live arrival tracking',
+    marquee7: 'Rate every job',
+    marquee8: 'English and Urdu',
+
+    statHoursValue: '9pm to 6am',
+    statHoursLabel: 'When the shops are shut and you still need help',
+    statTradesValue: '10',
+    statTradesLabel: 'Trades you can call, from plumber to welder',
+    statFeeValue: 'Zero',
+    statFeeLabel: 'Booking fee. You pay the tradesman, not us',
+    statPayValue: 'Cash',
+    statPayLabel: 'Settled at the door. No card, no gateway',
+
+    featuresEyebrow: 'What it does',
+    featuresTitle: 'Help that is already awake',
+    featuresSub: 'Post once. Everyone qualified nearby hears about it, and you choose who comes.',
+    f1Title: 'Everyone in range, at once',
+    f1Body:
+      'Your job goes to every tradesman who does that work and sits inside both your radius and theirs. No ringing around, no one at a time.',
+    f2Title: 'You pick the price',
+    f2Body:
+      'They bid, you compare. Price, rating, jobs completed and how far away they are, side by side before you commit to anyone.',
+    f3Title: 'Cash at the door',
+    f3Body:
+      'No card, no wallet, no gateway. You pay the person who did the work, when the work is done, exactly as you would anyway.',
+    f4Title: 'Watch them coming',
+    f4Body:
+      'Once you accept, their pin moves on the map while they travel, so you know whether to keep waiting or make other plans.',
+    f5Title: 'Ratings that stick',
+    f5Body:
+      'Both sides rate each other after every job. A tradesman who keeps turning up carries that with them to the next customer.',
+    f6Title: 'Urdu throughout',
+    f6Body:
+      'The whole app reads right to left in Urdu, set in Nastaliq, not a machine translation bolted onto an English layout.',
+
+    casesEyebrow: 'What it is for',
+    casesTitle: 'The nights this was built for',
+    casesNote: 'Illustrative situations, not customer testimonials.',
+    case1Title: 'Burst pipe',
+    case1Trade: 'Plumber',
+    case1Body:
+      'Kitchen flooding at eleven at night. Three prices within minutes, someone there before midnight.',
+    case2Title: 'Dead fuse',
+    case2Trade: 'Electrician',
+    case2Body:
+      'Half the house dark the evening before a wedding, and every shop on the road already closed.',
+    case3Title: 'AC gone',
+    case3Trade: 'AC technician',
+    case3Body:
+      'June, forty six degrees, a baby in the house, and the unit stops at two in the afternoon.',
+    case4Title: 'Jammed lock',
+    case4Trade: 'Locksmith',
+    case4Body: 'Key snapped in the front door after midnight with the whole family standing outside.',
+    case5Title: 'Gas smell',
+    case5Trade: 'Gas technician',
+    case5Body: 'A smell near the meter that nobody wants to sleep next to. This one should never wait.',
+
+    closingTitle: 'The shops are closed. Help is not.',
+    closingBody: 'Post the job in under a minute. Nearby tradesmen answer with a price.',
+
+    footerTagline: 'Emergency tradesmen across Pakistan, after the shops shut.',
+    footerProduct: 'Product',
+    footerCompany: 'Company',
+    footerLegal: 'Legal',
+    navFeatures: 'Features',
+    navPricing: 'Pricing',
+    navAbout: 'About',
+    navContact: 'Contact',
+    navPrivacy: 'Privacy',
+    navTerms: 'Terms',
+    navDataDeletion: 'Data deletion',
+    footerRights: 'Made in Pakistan.',
   },
   auth: {
     loginTitle: 'Welcome back',
@@ -295,6 +373,84 @@ export const ur: Mirror<Dictionary> = {
       'Go online, set how far you travel, and jobs near you arrive with the price already on the table. Keep the cash, settle the platform share later.',
     previewJobTitle: 'Kitchen pipe burst, water spreading',
     previewJobArea: 'Gulberg III, Lahore',
+
+    marquee1: 'Cash at the door',
+    marquee2: 'Every tradesman in range, pinged at once',
+    marquee3: 'You choose the price',
+    marquee4: 'No booking fee',
+    marquee5: 'Works after the shops shut',
+    marquee6: 'Live arrival tracking',
+    marquee7: 'Rate every job',
+    marquee8: 'English and Urdu',
+
+    statHoursValue: '9pm to 6am',
+    statHoursLabel: 'When the shops are shut and you still need help',
+    statTradesValue: '10',
+    statTradesLabel: 'Trades you can call, from plumber to welder',
+    statFeeValue: 'Zero',
+    statFeeLabel: 'Booking fee. You pay the tradesman, not us',
+    statPayValue: 'Cash',
+    statPayLabel: 'Settled at the door. No card, no gateway',
+
+    featuresEyebrow: 'What it does',
+    featuresTitle: 'Help that is already awake',
+    featuresSub: 'Post once. Everyone qualified nearby hears about it, and you choose who comes.',
+    f1Title: 'Everyone in range, at once',
+    f1Body:
+      'Your job goes to every tradesman who does that work and sits inside both your radius and theirs. No ringing around, no one at a time.',
+    f2Title: 'You pick the price',
+    f2Body:
+      'They bid, you compare. Price, rating, jobs completed and how far away they are, side by side before you commit to anyone.',
+    f3Title: 'Cash at the door',
+    f3Body:
+      'No card, no wallet, no gateway. You pay the person who did the work, when the work is done, exactly as you would anyway.',
+    f4Title: 'Watch them coming',
+    f4Body:
+      'Once you accept, their pin moves on the map while they travel, so you know whether to keep waiting or make other plans.',
+    f5Title: 'Ratings that stick',
+    f5Body:
+      'Both sides rate each other after every job. A tradesman who keeps turning up carries that with them to the next customer.',
+    f6Title: 'Urdu throughout',
+    f6Body:
+      'The whole app reads right to left in Urdu, set in Nastaliq, not a machine translation bolted onto an English layout.',
+
+    casesEyebrow: 'What it is for',
+    casesTitle: 'The nights this was built for',
+    casesNote: 'Illustrative situations, not customer testimonials.',
+    case1Title: 'Burst pipe',
+    case1Trade: 'Plumber',
+    case1Body:
+      'Kitchen flooding at eleven at night. Three prices within minutes, someone there before midnight.',
+    case2Title: 'Dead fuse',
+    case2Trade: 'Electrician',
+    case2Body:
+      'Half the house dark the evening before a wedding, and every shop on the road already closed.',
+    case3Title: 'AC gone',
+    case3Trade: 'AC technician',
+    case3Body:
+      'June, forty six degrees, a baby in the house, and the unit stops at two in the afternoon.',
+    case4Title: 'Jammed lock',
+    case4Trade: 'Locksmith',
+    case4Body: 'Key snapped in the front door after midnight with the whole family standing outside.',
+    case5Title: 'Gas smell',
+    case5Trade: 'Gas technician',
+    case5Body: 'A smell near the meter that nobody wants to sleep next to. This one should never wait.',
+
+    closingTitle: 'The shops are closed. Help is not.',
+    closingBody: 'Post the job in under a minute. Nearby tradesmen answer with a price.',
+
+    footerTagline: 'Emergency tradesmen across Pakistan, after the shops shut.',
+    footerProduct: 'Product',
+    footerCompany: 'Company',
+    footerLegal: 'Legal',
+    navFeatures: 'Features',
+    navPricing: 'Pricing',
+    navAbout: 'About',
+    navContact: 'Contact',
+    navPrivacy: 'Privacy',
+    navTerms: 'Terms',
+    navDataDeletion: 'Data deletion',
+    footerRights: 'Made in Pakistan.',
   },
   auth: {
     loginTitle: 'خوش آمدید',
