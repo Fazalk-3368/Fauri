@@ -31,7 +31,9 @@ function NotificationBell({ userId }: { userId: string }) {
   const { items, unreadCount, markAllRead } = useNotifications(userId, (n) => {
     toast.push({ title: n.title, body: n.body, tone: 'info' });
     // A new nearby job should appear in the feed without a manual refresh.
-    router.refresh();
+    // Chat is already streaming its own rows, so refreshing the whole server
+    // tree on every message just re-renders the page mid-conversation.
+    if (n.type !== 'new_message') router.refresh();
   });
 
   return (

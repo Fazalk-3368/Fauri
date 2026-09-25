@@ -44,14 +44,13 @@ export function OfferForm({
       message: message.trim() || null,
     };
 
-    const { error: writeError } = existing
-      ? await supabase.from('job_offers').update(payload).eq('id', existing.id)
-      : await supabase.from('job_offers').insert({
-          ...payload,
-          job_id: jobId,
-          provider_id: providerId,
-          status: 'pending',
-        });
+    // Upsert rather than insert-or-update: a provider who withdrew still owns a
+    // row that job_detail() hides, so the insert path would hit the unique
+    // constraint on (job_id, provider_id) with a raw database error.
+    const { error: writeError } = await supabase.from('job_offers').upsert(
+      { ...payload, job_id: jobId, provider_id: providerId, status: 'pending' },
+      { onConflict: 'job_id,provider_id' },
+    );
 
     if (writeError) {
       setError(errorMessage(writeError, dict.common.error));

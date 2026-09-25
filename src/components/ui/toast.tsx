@@ -15,6 +15,9 @@ type ToastContextValue = {
 
 const ToastContext = createContext<ToastContextValue | null>(null);
 
+/** How many toasts stay on screen at once; the oldest drops off. */
+const MAX_VISIBLE = 3;
+
 const TONE_ICON = { success: CheckCircle2, error: TriangleAlert, info: Info } as const;
 const TONE_CLASS: Record<ToastTone, string> = {
   success: 'border-brand/40 text-brand',
@@ -38,7 +41,7 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
   const push = useCallback(
     (toast: Omit<Toast, 'id'>) => {
       const id = crypto.randomUUID();
-      setToasts((prev) => [...prev.slice(-3), { ...toast, id }]);
+      setToasts((prev) => [...prev.slice(-(MAX_VISIBLE - 1)), { ...toast, id }]);
       timers.current.set(
         id,
         setTimeout(() => dismiss(id), 6000),
