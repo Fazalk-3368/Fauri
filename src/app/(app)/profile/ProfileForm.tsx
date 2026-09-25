@@ -7,11 +7,12 @@ import { Star } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useI18n } from '@/lib/i18n/provider';
 import { useToast } from '@/components/ui/toast';
-import { Badge, Button, Card, ErrorNote, Field, Input } from '@/components/ui';
-import { errorMessage } from '@/lib/utils';
+import { Badge, Button, Card, ErrorNote, Field, Input, PhoneInput } from '@/components/ui';
+import { errorMessage, normalisePkPhone } from '@/lib/utils';
 import type { Profile, ProviderProfile } from '@/lib/types/database';
 
-const PK_PHONE = /^\+92[0-9]{10}$/;
+// The +92 is fixed furniture in the field, so state holds only what follows it.
+const PK_LOCAL = /^[0-9]{10}$/;
 
 export function ProfileForm({
   profile,
@@ -27,7 +28,8 @@ export function ProfileForm({
   const toast = useToast();
 
   const [fullName, setFullName] = useState(profile.full_name);
-  const [phone, setPhone] = useState(profile.phone ?? '');
+  // Stored values carry the +92; the field shows only the local digits.
+  const [phone, setPhone] = useState(normalisePkPhone(profile.phone ?? ''));
   const [city, setCity] = useState(profile.city ?? '');
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
@@ -36,8 +38,8 @@ export function ProfileForm({
     e.preventDefault();
     setError(null);
 
-    const trimmedPhone = phone.trim();
-    if (trimmedPhone && !PK_PHONE.test(trimmedPhone)) {
+    const localPhone = normalisePkPhone(phone);
+    if (localPhone && !PK_LOCAL.test(localPhone)) {
       setError(dict.auth.invalidPhone);
       return;
     }
@@ -47,7 +49,7 @@ export function ProfileForm({
       .from('profiles')
       .update({
         full_name: fullName.trim(),
-        phone: trimmedPhone || null,
+        phone: localPhone ? `+92${localPhone}` : null,
         city: city.trim() || null,
         locale,
       })
@@ -101,13 +103,10 @@ export function ProfileForm({
           </Field>
 
           <Field label={dict.auth.phone} htmlFor="phone" hint={dict.auth.phoneHint}>
-            <Input
+            <PhoneInput
               id="phone"
-              type="tel"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              placeholder="+923001234567"
-              dir="ltr"
+              onChange={(e) => setPhone(normalisePkPhone(e.target.value))}
             />
           </Field>
 

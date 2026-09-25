@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { Wrench } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useI18n } from '@/lib/i18n/provider';
-import { Button, ErrorNote, Field, Input } from '@/components/ui';
+import { Button, ErrorNote, Field, Input, PasswordInput } from '@/components/ui';
 import { errorMessage, safeNext } from '@/lib/utils';
 
 function LoginForm() {
@@ -53,14 +53,14 @@ function LoginForm() {
       </Field>
 
       <Field label={dict.auth.password} htmlFor="password" required>
-        <Input
+        <PasswordInput
           id="password"
-          type="password"
           autoComplete="current-password"
           required
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          dir="ltr"
+          showLabel={dict.auth.showPassword}
+          hideLabel={dict.auth.hidePassword}
         />
       </Field>
 

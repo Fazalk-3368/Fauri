@@ -3,14 +3,23 @@
 import { Suspense, useState } from 'react';
 import Link from 'next/link';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { HardHat, UserRound, Wrench } from 'lucide-react';
+import { HardHat, MailCheck, UserRound, Wrench } from 'lucide-react';
 import { createClient } from '@/lib/supabase/client';
 import { useI18n } from '@/lib/i18n/provider';
-import { Button, Card, ErrorNote, Field, Input } from '@/components/ui';
-import { cn, errorMessage } from '@/lib/utils';
+import {
+  Button,
+  Card,
+  ErrorNote,
+  Field,
+  Input,
+  PasswordInput,
+  PhoneInput,
+} from '@/components/ui';
+import { cn, errorMessage, normalisePkPhone } from '@/lib/utils';
 import type { UserRole } from '@/lib/types/database';
 
-const PK_PHONE = /^\+92[0-9]{10}$/;
+// The +92 is fixed furniture in the field, so state holds only what follows it.
+const PK_LOCAL = /^[0-9]{10}$/;
 
 function SignupForm() {
   const { dict, locale } = useI18n();
@@ -27,6 +36,8 @@ function SignupForm() {
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [resending, setResending] = useState(false);
+  const [resent, setResent] = useState(false);
 
   const roleOptions = [
     {
@@ -51,8 +62,8 @@ function SignupForm() {
       setError(dict.auth.passwordTooShort);
       return;
     }
-    const trimmedPhone = phone.trim();
-    if (trimmedPhone && !PK_PHONE.test(trimmedPhone)) {
+    const localPhone = normalisePkPhone(phone);
+    if (localPhone && !PK_LOCAL.test(localPhone)) {
       setError(dict.auth.invalidPhone);
       return;
     }
@@ -65,10 +76,14 @@ function SignupForm() {
       email: email.trim(),
       password,
       options: {
+        // Without this Supabase sends people to whatever Site URL is configured,
+        // which is localhost on a fresh project and makes every confirmation
+        // link dead for anyone who is not the developer.
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
         data: {
           full_name: fullName.trim(),
           role,
-          phone: trimmedPhone || null,
+          phone: localPhone ? `+92${localPhone}` : null,
           locale,
         },
       },
@@ -91,13 +106,41 @@ function SignupForm() {
     router.refresh();
   };
 
+  const resend = async () => {
+    setResending(true);
+    setError(null);
+    const { error: resendError } = await createClient().auth.resend({
+      type: 'signup',
+      email: email.trim(),
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback` },
+    });
+    if (resendError) setError(errorMessage(resendError, dict.common.error));
+    else setResent(true);
+    setResending(false);
+  };
+
   if (notice) {
     return (
-      <Card className="p-6 text-center">
-        <p className="text-sm text-fg">{notice}</p>
-        <Link href="/login" className="mt-4 inline-block">
-          <Button variant="secondary">{dict.auth.loginAction}</Button>
-        </Link>
+      <Card className="p-6 text-center sm:p-8">
+        <span className="mx-auto grid size-12 place-items-center rounded-full bg-brand-soft text-brand-soft-fg">
+          <MailCheck className="size-6" aria-hidden />
+        </span>
+        <h2 className="font-display mt-4 text-xl font-semibold">{dict.auth.checkEmailTitle}</h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted">{notice}</p>
+        <p className="mt-1 text-sm font-medium text-fg" dir="ltr">
+          {email.trim()}
+        </p>
+
+        <ErrorNote>{error}</ErrorNote>
+
+        <div className="mt-6 flex flex-col gap-2">
+          <Link href="/login">
+            <Button fullWidth>{dict.auth.loginAction}</Button>
+          </Link>
+          <Button variant="ghost" onClick={resend} loading={resending} disabled={resent}>
+            {resent ? dict.auth.resentEmail : dict.auth.resendEmail}
+          </Button>
+        </div>
       </Card>
     );
   }
@@ -152,27 +195,23 @@ function SignupForm() {
       </Field>
 
       <Field label={dict.auth.phone} htmlFor="phone" hint={dict.auth.phoneHint}>
-        <Input
+        <PhoneInput
           id="phone"
-          type="tel"
           value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-          placeholder="+923001234567"
-          autoComplete="tel"
-          dir="ltr"
+          onChange={(e) => setPhone(normalisePkPhone(e.target.value))}
         />
       </Field>
 
       <Field label={dict.auth.password} htmlFor="password" required>
-        <Input
+        <PasswordInput
           id="password"
-          type="password"
           required
           minLength={8}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           autoComplete="new-password"
-          dir="ltr"
+          showLabel={dict.auth.showPassword}
+          hideLabel={dict.auth.hidePassword}
         />
       </Field>
 

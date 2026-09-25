@@ -1,7 +1,15 @@
 'use client';
 
-import { cloneElement, forwardRef, isValidElement, useEffect, useId, useRef } from 'react';
-import { Loader2 } from 'lucide-react';
+import {
+  cloneElement,
+  forwardRef,
+  isValidElement,
+  useEffect,
+  useId,
+  useRef,
+  useState,
+} from 'react';
+import { Eye, EyeOff, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 /* -------------------------------------------------------------------------- */
@@ -90,6 +98,79 @@ export const Select = forwardRef<HTMLSelectElement, React.SelectHTMLAttributes<H
     return <select ref={ref} className={cn(fieldBase, 'min-h-11 pe-8', className)} {...props} />;
   },
 );
+
+/**
+ * Pakistani number entry. The +92 is fixed furniture rather than something to
+ * type, so the value held in state is the ten digits after it.
+ *
+ * The wrapper is forced to dir="ltr" because a phone number is LTR data in
+ * both locales: without it the prefix would flip to the far side of the field
+ * in Urdu and sit nowhere near the digits it belongs to.
+ */
+export const PhoneInput = forwardRef<
+  HTMLInputElement,
+  Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'dir'>
+>(function PhoneInput({ className, ...props }, ref) {
+  return (
+    <div className="relative" dir="ltr">
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-y-0 start-0 flex items-center ps-3.5 text-sm font-medium text-muted"
+      >
+        +92
+      </span>
+      <span
+        aria-hidden
+        className="pointer-events-none absolute inset-y-2 start-11 w-px bg-border"
+      />
+      <input
+        ref={ref}
+        type="tel"
+        inputMode="numeric"
+        autoComplete="tel-national"
+        // No maxLength: it would truncate a pasted "+92 300 1234567" before the
+        // country code is stripped. normalisePkPhone does the capping instead.
+        placeholder="3001234567"
+        className={cn(fieldBase, 'min-h-11 ps-14', className)}
+        {...props}
+      />
+    </div>
+  );
+});
+
+/** Password entry with a reveal toggle. */
+export const PasswordInput = forwardRef<
+  HTMLInputElement,
+  Omit<React.InputHTMLAttributes<HTMLInputElement>, 'type'> & {
+    showLabel: string;
+    hideLabel: string;
+  }
+>(function PasswordInput({ className, showLabel, hideLabel, ...props }, ref) {
+  const [visible, setVisible] = useState(false);
+  return (
+    <div className="relative">
+      <input
+        ref={ref}
+        type={visible ? 'text' : 'password'}
+        dir="ltr"
+        className={cn(fieldBase, 'min-h-11 pe-12', className)}
+        {...props}
+      />
+      <button
+        type="button"
+        onClick={() => setVisible((v) => !v)}
+        aria-label={visible ? hideLabel : showLabel}
+        aria-pressed={visible}
+        // Not in the tab order: the label already says what it does, and a
+        // stop between password and submit slows the common path down.
+        tabIndex={-1}
+        className="absolute inset-y-0 end-0 grid w-12 place-items-center rounded-e-xl text-muted transition-colors duration-100 hover:text-fg"
+      >
+        {visible ? <EyeOff className="size-4.5" /> : <Eye className="size-4.5" />}
+      </button>
+    </div>
+  );
+});
 
 export function Field({
   label,

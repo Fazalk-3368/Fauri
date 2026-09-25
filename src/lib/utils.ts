@@ -65,6 +65,25 @@ export function errorMessage(error: unknown, fallback: string) {
 }
 
 /**
+ * Reduce anything a person might type or paste into the ten digits that follow
+ * +92, which is what the field stores.
+ *
+ * Handles `3001234567`, `03001234567`, `+92 300 1234567` and `00923001234567`.
+ * Stripping a leading `92` is safe because Pakistani mobile numbers all begin
+ * with a 3, so a real local number never starts with those digits. Capping
+ * happens here rather than via maxLength on the input: maxLength truncates the
+ * raw string before the country code is removed, which turns a pasted
+ * `+92 300 1234567` into `30012`.
+ */
+export function normalisePkPhone(raw: string) {
+  let d = raw.replace(/\D/g, '');
+  if (d.startsWith('0092')) d = d.slice(4);
+  else if (d.startsWith('92')) d = d.slice(2);
+  if (d.startsWith('0')) d = d.slice(1);
+  return d.slice(0, 10);
+}
+
+/**
  * `next` arrives from the query string, so an absolute URL there would turn a
  * successful login into an off-site handoff — a clean phishing setup, since the
  * victim has just proved the site is real by signing into it. Same-origin paths
