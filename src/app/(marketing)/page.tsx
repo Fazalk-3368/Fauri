@@ -34,10 +34,14 @@ export default function LandingPage() {
     <>
       {/* Hero: asymmetric split. Copy on the start side, the product itself on
           the end side, rather than a centred block over empty space. */}
-      <section className="relative overflow-hidden">
+      {/* `isolate` plus -z-10 on the wash: an absolutely positioned element
+          paints above static siblings, so without this the blob sits on top of
+          the headline and greys it out. Invisible at desktop width because the
+          blob is off to the side; at 360px it covers the whole hero. */}
+      <section className="relative isolate overflow-hidden">
         <div
           aria-hidden
-          className="pointer-events-none absolute -top-40 end-[-10%] size-[36rem] rounded-full bg-brand-soft/60 blur-3xl"
+          className="pointer-events-none absolute -top-40 end-[-10%] -z-10 size-[36rem] rounded-full bg-brand-soft/60 blur-3xl"
         />
         <div className="mx-auto grid w-full max-w-6xl items-center gap-12 px-4 pb-16 pt-12 sm:px-6 sm:pb-24 sm:pt-20 lg:grid-cols-[1.05fr_0.95fr] lg:gap-16">
           <div>

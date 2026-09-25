@@ -25,6 +25,9 @@ export const en = {
     no: 'No',
     none: 'None yet',
     language: 'اردو',
+    // English in both slots, same rule as the other strings Claude wrote.
+    menu: 'Menu',
+    closeMenu: 'Close menu',
   },
   nav: {
     dashboard: 'Dashboard',
@@ -333,6 +336,9 @@ export const ur: Mirror<Dictionary> = {
     no: 'نہیں',
     none: 'ابھی کچھ نہیں',
     language: 'English',
+    // English in both slots, same rule as the other strings Claude wrote.
+    menu: 'Menu',
+    closeMenu: 'Close menu',
   },
   nav: {
     dashboard: 'ڈیش بورڈ',

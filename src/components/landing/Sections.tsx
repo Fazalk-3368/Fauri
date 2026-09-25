@@ -37,10 +37,12 @@ export function PageHero({
   lede?: string;
 }) {
   return (
-    <section className="relative overflow-hidden border-b border-border">
+    // isolate + -z-10: see the note on the landing hero. A positioned blob
+    // paints above static text unless it is pushed behind explicitly.
+    <section className="relative isolate overflow-hidden border-b border-border">
       <div
         aria-hidden
-        className="pointer-events-none absolute -top-32 end-[-12%] size-[28rem] rounded-full bg-brand-soft/60 blur-3xl"
+        className="pointer-events-none absolute -top-32 end-[-12%] -z-10 size-[28rem] rounded-full bg-brand-soft/60 blur-3xl"
       />
       <div className="mx-auto w-full max-w-3xl px-4 py-16 sm:px-6 sm:py-20">
         {eyebrow && <Eyebrow>{eyebrow}</Eyebrow>}
