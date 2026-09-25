@@ -37,9 +37,7 @@ function SignupForm() {
   const [loading, setLoading] = useState(false);
   const [resending, setResending] = useState(false);
   const [resent, setResent] = useState(false);
-  const [awaitingCode, setAwaitingCode] = useState(false);
-  const [code, setCode] = useState('');
-  const [verifying, setVerifying] = useState(false);
+  const [emailSent, setEmailSent] = useState(false);
 
   const roleOptions = [
     {
@@ -97,39 +95,11 @@ function SignupForm() {
       return;
     }
 
-    // With email confirmation switched on there is no session yet, so we ask
-    // for the code instead of sending people off to a link. A link has to come
-    // back to an allowlisted redirect URL; a code does not, which removes the
-    // whole class of "the email took me to the wrong site" failures.
+    // With email confirmation switched on there is no session yet: Supabase
+    // has sent a link and will not hand over a session until it is used.
     if (!data.session) {
-      setAwaitingCode(true);
+      setEmailSent(true);
       setLoading(false);
-      return;
-    }
-
-    router.push(role === 'provider' ? '/provider/setup' : '/dashboard');
-    router.refresh();
-  };
-
-  const verify = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setError(null);
-
-    if (code.length !== 6) {
-      setError(dict.auth.codeTooShort);
-      return;
-    }
-
-    setVerifying(true);
-    const { error: otpError } = await createClient().auth.verifyOtp({
-      email: email.trim(),
-      token: code,
-      type: 'signup',
-    });
-
-    if (otpError) {
-      setError(errorMessage(otpError, dict.common.error));
-      setVerifying(false);
       return;
     }
 
@@ -149,69 +119,38 @@ function SignupForm() {
     setResending(false);
   };
 
-  if (awaitingCode) {
+  if (emailSent) {
     return (
-      <Card className="p-6 sm:p-8">
-        <div className="text-center">
-          <span className="mx-auto grid size-12 place-items-center rounded-full bg-brand-soft text-brand-soft-fg">
-            <MailCheck className="size-6" aria-hidden />
-          </span>
-          <h2 className="font-display mt-4 text-xl font-semibold">{dict.auth.codeTitle}</h2>
-          <p className="mt-2 text-sm text-muted">{dict.auth.codeSentTo}</p>
-          <p className="mt-0.5 text-sm font-medium text-fg" dir="ltr">
-            {email.trim()}
-          </p>
-          {/* Supabase only lets you edit email templates once custom SMTP is
-              configured. Until then the default template sends a link and no
-              code, so the screen has to work for both. */}
-          <p className="mt-3 text-xs leading-relaxed text-muted">{dict.auth.codeOrLink}</p>
-        </div>
+      <Card className="p-6 text-center sm:p-8">
+        <span className="mx-auto grid size-12 place-items-center rounded-full bg-brand-soft text-brand-soft-fg">
+          <MailCheck className="size-6" aria-hidden />
+        </span>
+        <h2 className="font-display mt-4 text-xl font-semibold">{dict.auth.checkEmailTitle}</h2>
+        <p className="mt-2 text-sm leading-relaxed text-muted">{dict.auth.checkEmail}</p>
+        <p className="mt-1 text-sm font-medium text-fg" dir="ltr">
+          {email.trim()}
+        </p>
 
-        <form onSubmit={verify} className="mt-6 space-y-4">
-          <Field label={dict.auth.code} htmlFor="code" required>
-            <Input
-              id="code"
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              // Six digits read as a group, so give them room and centre them.
-              className="text-center text-2xl font-semibold tracking-[0.5em] tabular-nums"
-              dir="ltr"
-              value={code}
-              onChange={(e) => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-              autoFocus
-            />
-          </Field>
+        <ErrorNote>{error}</ErrorNote>
 
-          <ErrorNote>{error}</ErrorNote>
-
-          <Button type="submit" size="lg" fullWidth loading={verifying}>
-            {dict.auth.verifyAction}
+        <div className="mt-6 flex flex-col gap-2">
+          <Link href="/login">
+            <Button fullWidth>{dict.auth.loginAction}</Button>
+          </Link>
+          <Button variant="ghost" onClick={resend} loading={resending} disabled={resent}>
+            {resent ? dict.auth.resentEmail : dict.auth.resendEmail}
           </Button>
-
-          <div className="flex flex-col gap-1.5 pt-1">
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={resend}
-              loading={resending}
-              disabled={resent}
-            >
-              {resent ? dict.auth.resentEmail : dict.auth.resendEmail}
-            </Button>
-            <Button
-              type="button"
-              variant="ghost"
-              onClick={() => {
-                setAwaitingCode(false);
-                setCode('');
-                setResent(false);
-                setError(null);
-              }}
-            >
-              {dict.auth.wrongEmail}
-            </Button>
-          </div>
-        </form>
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setEmailSent(false);
+              setResent(false);
+              setError(null);
+            }}
+          >
+            {dict.auth.wrongEmail}
+          </Button>
+        </div>
       </Card>
     );
   }
