@@ -51,6 +51,17 @@ export const en = {
     step3Body: 'Compare offers, ratings and arrival times. Accept the one you want.',
     step4Title: 'Pay cash when it is fixed',
     step4Body: 'No card needed. Settle directly with the worker and rate them afterwards.',
+    trustCash: 'Cash at the door',
+    trustCashBody: 'No card, no wallet, no booking fee.',
+    trustFast: 'Answers in minutes',
+    trustFastBody: 'Every qualified tradesman in range is pinged at once.',
+    trustChoice: 'You pick, not us',
+    trustChoiceBody: 'Compare price, rating and arrival time before you accept.',
+    providerTitle: 'The work comes to you.',
+    providerBody:
+      'Go online, set how far you travel, and jobs near you arrive with the price already on the table. Keep the cash, settle the platform share later.',
+    previewJobTitle: 'Kitchen pipe burst, water spreading',
+    previewJobArea: 'Gulberg III, Lahore',
   },
   auth: {
     loginTitle: 'Welcome back',
@@ -125,7 +136,7 @@ export const en = {
     completing: 'Closing…',
     finalAmount: 'Final amount paid (PKR)',
     completeHint: 'Confirm the cash amount actually handed over.',
-    agreedHint: 'Agreed: {price}. Enter more if the work grew — anything less has to be closed by the customer.',
+    agreedHint: 'Agreed: {price}. Enter more if the work grew. Anything less has to be closed by the customer.',
     belowAgreed: 'Only the customer can close this job for less than {price}. Ask them to confirm the lower amount.',
     postedAt: 'Posted {time}',
     status: {
@@ -270,6 +281,20 @@ export const ur: Mirror<Dictionary> = {
     step3Body: 'قیمتوں، درجہ بندی اور پہنچنے کے وقت کا موازنہ کریں۔ جو پسند آئے اسے قبول کریں۔',
     step4Title: 'کام مکمل ہونے پر نقد ادائیگی',
     step4Body: 'کارڈ کی ضرورت نہیں۔ کاریگر کو براہ راست ادائیگی کریں اور بعد میں درجہ بندی دیں۔',
+    // English in both slots, same rule as job.agreedHint: these were written
+    // without a native speaker. They are the landing page, so they are the
+    // first thing worth translating properly.
+    trustCash: 'Cash at the door',
+    trustCashBody: 'No card, no wallet, no booking fee.',
+    trustFast: 'Answers in minutes',
+    trustFastBody: 'Every qualified tradesman in range is pinged at once.',
+    trustChoice: 'You pick, not us',
+    trustChoiceBody: 'Compare price, rating and arrival time before you accept.',
+    providerTitle: 'The work comes to you.',
+    providerBody:
+      'Go online, set how far you travel, and jobs near you arrive with the price already on the table. Keep the cash, settle the platform share later.',
+    previewJobTitle: 'Kitchen pipe burst, water spreading',
+    previewJobArea: 'Gulberg III, Lahore',
   },
   auth: {
     loginTitle: 'خوش آمدید',
@@ -347,7 +372,7 @@ export const ur: Mirror<Dictionary> = {
     // Deliberately English until a native speaker writes these. They appear
     // while cash is being settled, so a clumsy translation costs more than the
     // language switch does. `Mirror<Dictionary>` requires the keys to exist.
-    agreedHint: 'Agreed: {price}. Enter more if the work grew — anything less has to be closed by the customer.',
+    agreedHint: 'Agreed: {price}. Enter more if the work grew. Anything less has to be closed by the customer.',
     belowAgreed: 'Only the customer can close this job for less than {price}. Ask them to confirm the lower amount.',
     postedAt: '{time} پوسٹ ہوا',
     status: {

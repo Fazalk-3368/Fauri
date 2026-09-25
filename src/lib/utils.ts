@@ -7,7 +7,9 @@ export function cn(...inputs: ClassValue[]) {
 
 /** PKR with thousands separators and no trailing decimals. */
 export function formatPkr(amount: number | null | undefined, locale = 'en') {
-  if (amount == null) return '—';
+  // Hyphen, not an em-dash: this string renders on screen wherever a price is
+  // still unset, and the em-dash is banned from user-visible copy.
+  if (amount == null) return '-';
   return new Intl.NumberFormat(locale === 'ur' ? 'ur-PK' : 'en-PK', {
     style: 'currency',
     currency: 'PKR',
