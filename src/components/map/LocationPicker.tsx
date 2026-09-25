@@ -5,7 +5,7 @@ import { Crosshair } from 'lucide-react';
 import { MapCanvas } from './MapCanvas';
 import { Button } from '@/components/ui';
 import { useI18n } from '@/lib/i18n/provider';
-import { browserLocation, DEFAULT_CENTER, type LatLng } from '@/lib/map';
+import { browserLocation, DEFAULT_CENTER, LocationError, type LatLng } from '@/lib/map';
 
 export function LocationPicker({
   value,
@@ -31,11 +31,7 @@ export function LocationPicker({
       onChange(pos);
       setCenter(pos);
     } catch (err) {
-      setError(
-        err instanceof Error && err.message === 'unsupported'
-          ? dict.map.unsupported
-          : dict.map.denied,
-      );
+      setError(dict.map[err instanceof LocationError ? err.kind : 'unavailable']);
     } finally {
       setLocating(false);
     }

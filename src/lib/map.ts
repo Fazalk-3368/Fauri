@@ -43,16 +43,42 @@ export function haversineMetres(a: LatLng, b: LatLng) {
   return 2 * R * Math.asin(Math.sqrt(h));
 }
 
+export type LocationErrorKind = 'unsupported' | 'denied' | 'unavailable' | 'timeout';
+
+/** Carries which of the three browser failures happened, not just that one did. */
+export class LocationError extends Error {
+  readonly kind: LocationErrorKind;
+  constructor(kind: LocationErrorKind) {
+    super(kind);
+    this.name = 'LocationError';
+    this.kind = kind;
+  }
+}
+
 export function browserLocation(): Promise<LatLng> {
   return new Promise((resolve, reject) => {
     if (typeof navigator === 'undefined' || !navigator.geolocation) {
-      reject(new Error('unsupported'));
+      reject(new LocationError('unsupported'));
       return;
     }
     navigator.geolocation.getCurrentPosition(
       (pos) => resolve({ lat: pos.coords.latitude, lng: pos.coords.longitude }),
-      (err) => reject(err),
-      { enableHighAccuracy: true, timeout: 12000, maximumAge: 30000 },
+      (err) =>
+        reject(
+          new LocationError(
+            err.code === err.PERMISSION_DENIED
+              ? 'denied'
+              : err.code === err.TIMEOUT
+                ? 'timeout'
+                : 'unavailable',
+          ),
+        ),
+      // Deliberately coarse. A high-accuracy fix needs GPS, which indoors or
+      // under cloud can take far longer than anyone will wait, and the failure
+      // looked identical to a refused permission. Network positioning answers
+      // in a second or two and is easily good enough to match a job; the watch
+      // below then refines it with GPS once the provider is moving.
+      { enableHighAccuracy: false, timeout: 20000, maximumAge: 60000 },
     );
   });
 }

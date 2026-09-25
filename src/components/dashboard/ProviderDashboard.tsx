@@ -158,8 +158,9 @@ export function ProviderDashboard({
     if (next) {
       const pos = await requestLocation();
       if (!pos) {
+        // No toast: the alert below already names the actual failure, and this
+        // one hardcoded "permission denied" regardless of the real cause.
         setTogglingOnline(false);
-        toast.error(dict.map.denied);
         return;
       }
     }
@@ -232,7 +233,7 @@ export function ProviderDashboard({
         <Alert
           tone="danger"
           icon={AlertTriangle}
-          title={locationError === 'unsupported' ? dict.map.unsupported : dict.map.denied}
+          title={dict.map[locationError]}
         />
       )}
 
